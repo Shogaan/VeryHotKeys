@@ -9,7 +9,7 @@ First of all, you can clone it by Git
 git clone https://github.com/Shogaan/VeryHotKeys.git
 ```
 
-Second way is useng exe-files:
+Second way is using exe-files:
 
 #### Portable version
 
