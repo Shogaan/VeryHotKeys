@@ -14,13 +14,13 @@ Second way is using exe-files:
 #### Portable version
 
 ```
-http://www.mediafire.com/file/xjsa5e663x968qw/Very-Hot-Key-setup.exe/file
+http://www.mediafire.com/file/vz01f7vwhozy99l/Very_Hot_Keys%2528portable%2529.zip/file
 ```
 
 #### Installing version
 
 ```
-http://www.mediafire.com/file/vz01f7vwhozy99l/Very_Hot_Keys%2528portable%2529.zip/file
+http://www.mediafire.com/file/xjsa5e663x968qw/Very-Hot-Key-setup.exe/file
 ```
 
 ## Built with
