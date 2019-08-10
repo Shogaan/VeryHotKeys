@@ -2,21 +2,22 @@
 
 # Form implementation generated from reading ui file 'interface.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.1
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(563, 248)
+        MainWindow.setWindowModality(QtCore.Qt.NonModal)
+        MainWindow.resize(560, 250)
         MainWindow.setMinimumSize(QtCore.QSize(350, 155))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/logo2.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
+        MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -26,6 +27,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setToolTip("")
+        self.label.setStatusTip("")
+        self.label.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates))
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -34,7 +38,7 @@ class Ui_MainWindow(object):
         self.plus_button.setAutoFillBackground(False)
         self.plus_button.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("images/Plus-Symbol-Transparent-Image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("images/plus-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.plus_button.setIcon(icon1)
         self.plus_button.setCheckable(False)
         self.plus_button.setAutoRepeat(False)
@@ -47,11 +51,19 @@ class Ui_MainWindow(object):
         self.minus_button = QtWidgets.QPushButton(self.centralwidget)
         self.minus_button.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("images/horizontal-line-png-6.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("images/minus-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.minus_button.setIcon(icon2)
         self.minus_button.setFlat(True)
         self.minus_button.setObjectName("minus_button")
         self.horizontalLayout.addWidget(self.minus_button)
+        self.edit_button = QtWidgets.QPushButton(self.centralwidget)
+        self.edit_button.setText("")
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("images/pencil-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.edit_button.setIcon(icon3)
+        self.edit_button.setFlat(True)
+        self.edit_button.setObjectName("edit_button")
+        self.horizontalLayout.addWidget(self.edit_button)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.line = QtWidgets.QFrame(self.centralwidget)
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
@@ -59,10 +71,12 @@ class Ui_MainWindow(object):
         self.line.setObjectName("line")
         self.verticalLayout.addWidget(self.line)
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
+        self.tableWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidget.setTabKeyNavigation(False)
         self.tableWidget.setProperty("showDropIndicator", False)
-        self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tableWidget.setDragDropOverwriteMode(False)
+        self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(3)
@@ -79,7 +93,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addLayout(self.verticalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 563, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 560, 21))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -90,7 +104,15 @@ class Ui_MainWindow(object):
         self.actionTo_tray.setObjectName("actionTo_tray")
         self.actionExit = QtWidgets.QAction(MainWindow)
         self.actionExit.setObjectName("actionExit")
+        self.turn_on_dark_theme = QtWidgets.QAction(MainWindow)
+        self.turn_on_dark_theme.setCheckable(True)
+        self.turn_on_dark_theme.setObjectName("turn_on_dark_theme")
+        self.actionSettings = QtWidgets.QAction(MainWindow)
+        self.actionSettings.setObjectName("actionSettings")
+        self.actionSettings_ = QtWidgets.QAction(MainWindow)
+        self.actionSettings_.setObjectName("actionSettings_")
         self.menuFile.addAction(self.actionTo_tray)
+        self.menuFile.addAction(self.actionSettings_)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
         self.menubar.addAction(self.menuFile.menuAction())
@@ -113,5 +135,7 @@ class Ui_MainWindow(object):
         self.actionTo_tray.setText(_translate("MainWindow", "To tray"))
         self.actionTo_tray.setShortcut(_translate("MainWindow", "Ctrl+Down"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
-
+        self.turn_on_dark_theme.setText(_translate("MainWindow", "Dark theme"))
+        self.actionSettings.setText(_translate("MainWindow", "Settings"))
+        self.actionSettings_.setText(_translate("MainWindow", "Settings"))
 
