@@ -14,14 +14,21 @@ Second way is using exe-files:
 #### Portable version
 
 ```
-http://www.mediafire.com/file/vz01f7vwhozy99l/Very_Hot_Keys%2528portable%2529.zip/file
+[http://www.mediafire.com/file/voc3vgbegcyjypq/Very_Hot_Keys%2528portable%2529_v1-1.zip/file](http://www.mediafire.com/file/voc3vgbegcyjypq/Very_Hot_Keys%2528portable%2529_v1-1.zip/file)
 ```
 
 #### Installing version
 
 ```
-http://www.mediafire.com/file/xjsa5e663x968qw/Very-Hot-Key-setup.exe/file
+[http://www.mediafire.com/file/8mzg2ky1audn9h2/very-hot-keys-setup-1-1.exe/file](http://www.mediafire.com/file/8mzg2ky1audn9h2/very-hot-keys-setup-1-1.exe/file)
 ```
+
+## New in v1.1
+
+* Added dark theme and little opportunity for customization
+* Added editing of hotkeys(shortcuts)
+* Now you can open dirs
+* Fixed crashes when you two times click "Create combination" in "Add window"
 
 ## Built with
 
