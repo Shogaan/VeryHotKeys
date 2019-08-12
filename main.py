@@ -50,7 +50,8 @@ class AddWindow(QDialog, Ui_Dialog):
         if self.mode.currentText() == "Open directory":
             file_name_or_dir = str(QFileDialog.getExistingDirectory(directory=r"c:\\"))
         else:
-            file_name_or_dir = str(QFileDialog.getOpenFileName(directory=r"c:\\")[0])
+            file_name_or_dir = str(QFileDialog.getOpenFileName(directory=r"c:\\",
+                                                               options=QFileDialog.DontResolveSymlinks)[0])
 
         self.path_or_txt.setText(file_name_or_dir)
 
@@ -227,12 +228,12 @@ class SettingsWindow(QDialog, Ui_settings_window):
     def get_bg_colour_dark(self):
         dict_of_settings['bg_colour_bright'] = get_colour()
         self.showed_bg_colour_dark.setStyleSheet("QFrame{"
-                                                   "background-color: rgb"+dict_of_settings['bg_colour_bright']+"}")
+                                                 "background-color: rgb"+dict_of_settings['bg_colour_bright']+"}")
 
     def get_font_colour_dark(self):
         dict_of_settings['font_colour_bright'] = get_colour()
         self.showed_font_colour_dark.setStyleSheet("QFrame{"
-                                                     "background-color: rgb"+dict_of_settings['font_colour_dark']+"}")
+                                                   "background-color: rgb"+dict_of_settings['font_colour_dark']+"}")
 # ------------------------------------------------
 
     def load_graphic_display_settings(self):
@@ -358,7 +359,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
         self.actionExit.triggered.connect(self.close)
 
-# --------------Set tray icon---------------------
+        # --------------Set tray icon---------------------
         self.tray_icon = QSystemTrayIcon(self)
         self.tray_icon.setIcon(QIcon("images/logo2.ico"))
 
@@ -374,9 +375,9 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
-# ------------------------------------------------
+    # ------------------------------------------------
 
-# -----------------Initialization CSS-------------
+    # -----------------Initialization CSS-------------
     def load_settings(self):
         if dict_of_settings['theme'] == "bright":
             self.setting_bright()
@@ -462,9 +463,9 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         self.plus_button.setIcon(QIcon("images/plus-black.png"))
         self.minus_button.setIcon(QIcon("images/minus-black.png"))
         self.edit_button.setIcon(QIcon("images/pencil-black.png"))
-# ------------------------------------------------
+    # ------------------------------------------------
 
-# ---------Open different windows-----------------
+    # ---------Open different windows-----------------
     def open_add_window(self):
         add_window = AddWindow()
         add_window.setModal(True)
@@ -490,19 +491,20 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
     def open_edit_window(self):
         index = self.tableWidget.currentRow()
-        edit_window = EditWindow(index)
-        edit_window.setModal(True)
-        dialog_window = edit_window.exec_()
+        if index != -1:
+            edit_window = EditWindow(index)
+            edit_window.setModal(True)
+            dialog_window = edit_window.exec_()
 
-        if dialog_window == QDialog.Accepted:
-            if list_of_hotkeys[index][0] != "":
-                self.update_hotkey_in_table_and_save_it(index, list_of_hotkeys[index])
-                self.create_hotkeys(list_of_hotkeys[index])
-            else:
-                list_of_hotkeys.pop(index)
-# ------------------------------------------------
+            if dialog_window == QDialog.Accepted:
+                if list_of_hotkeys[index][0] != "":
+                    self.update_hotkey_in_table_and_save_it(index, list_of_hotkeys[index])
+                    self.create_hotkeys(list_of_hotkeys[index])
+                else:
+                    list_of_hotkeys.pop(index)
+    # ------------------------------------------------
 
-# --------Work with table-------------------------
+    # --------Work with table-------------------------
     def add_hotkey_to_table_and_save_it(self):
         self.tableWidget.insertRow(self.tableWidget.rowCount())
 
@@ -517,9 +519,9 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         for column, item in enumerate(element):
             self.tableWidget.setItem(index, column, QtWidgets.QTableWidgetItem(item))
         write_hotkeys_json()
-# ------------------------------------------------
+    # ------------------------------------------------
 
-# --------Some "system" methods-------------------
+    # --------Some "system" methods-------------------
     def load_saved_hotkeys(self):
         for i in range(len(list_of_hotkeys)):
             self.tableWidget.insertRow(self.tableWidget.rowCount())
@@ -559,6 +561,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             list_of_hotkeys.pop(index)
             write_hotkeys_json()
 # ------------------------------------------------
+
 
 # Open "Colour Chooser"'s window
 def get_colour():
