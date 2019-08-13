@@ -22,16 +22,30 @@ DEFAULT_SETTINGS = {"bg_colour_bright": "(255, 255, 255)",
                     "bg_colour_dark": "(43, 43, 43)",
                     "font_colour_dark": "(214, 214, 214)"}
 
-list_of_hotkeys = []
 dict_of_settings = {}
 
 
-class AddWindow(QDialog, Ui_Dialog):
-    def __init__(self):
-        super(AddWindow, self).__init__()
+class AddAndEditWindow(QDialog, Ui_Dialog):
+    def __init__(self, **kwargs):
+        super(AddAndEditWindow, self).__init__()
         self.setupUi(self)
 
         self.load_theme()
+
+        self.is_edit = kwargs['is_edit']
+        self.index_of_hotkey_for_edit = kwargs['index_of_hotkey_for_edit'] if self.is_edit else None
+
+        if kwargs['is_edit']:
+            with open(JS_HOTKEYS) as file_hotkeys:
+                self.old_combination,\
+                self.operating_mode,\
+                self.argument = json.load(file_hotkeys)[self.index_of_hotkey_for_edit]
+
+            # self.old_combination, self.operating_mode, self.argument = list_of_hotkeys_del[index_of_hotkey_for_edit]
+
+            self.mode.setCurrentText(self.operating_mode)
+            self.combination.setText(self.old_combination)
+            self.path_or_txt.setText(self.argument)
 
         self.buttonBox.accepted.connect(self.add_hotkey)
 
@@ -55,11 +69,34 @@ class AddWindow(QDialog, Ui_Dialog):
 
         self.path_or_txt.setText(file_name_or_dir)
 
-    def add_hotkey(self):
+    def add_hotkey(self): # dif
+        if self.is_edit:
+            keyboard.remove_hotkey(self.old_combination)
+
         mode = self.mode.currentText()
         combination = self.combination.text()
         argument = self.path_or_txt.text()
-        list_of_hotkeys.append([combination, mode, argument])
+
+        if self.is_edit:
+            with open(JS_HOTKEYS) as file_hotkeys:
+                list_of_hotkeys = json.load(file_hotkeys)
+                list_of_hotkeys[self.index_of_hotkey_for_edit] = [combination, mode, argument]
+
+                write_hotkeys_json(list_of_hotkeys)
+
+        else:
+            with open(JS_HOTKEYS) as file_hotkeys:
+                list_of_hotkeys = json.load(file_hotkeys)
+                list_of_hotkeys.append([combination, mode, argument])
+
+                write_hotkeys_json(list_of_hotkeys)
+
+    def on_reject(self, index):
+        with open(JS_HOTKEYS) as file:
+            list_of_hotkeys = json.load(file)
+            list_of_hotkeys[index] = [self.old_combination, self.operating_mode, self.argument]
+
+            write_hotkeys_json(list_of_hotkeys)
 
     def disable_open_btn(self):
         if self.mode.currentText() == "Type from entered text" or self.mode.currentText() == "Open URL":
@@ -97,98 +134,6 @@ class AddWindow(QDialog, Ui_Dialog):
                 font-size: """ + str(dict_of_settings['font_size']) + """px
             }
             
-            QLineEdit {
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            """)
-
-
-# This class is copy-paste of AddWindow with some changes
-# TODO Simple this shit
-class EditWindow(QDialog, Ui_edit_window):
-    def __init__(self, index_of_hotkey_for_edit):
-        super(EditWindow, self).__init__()
-        self.setupUi(self)
-
-        self.load_theme()
-
-        self.index_of_hotkey_for_edit = index_of_hotkey_for_edit
-
-        self.old_combination, self.operating_mode, self.argument = list_of_hotkeys[index_of_hotkey_for_edit]
-        self.mode.setCurrentText(self.operating_mode)
-        self.combination.setText(self.old_combination)
-        self.path_or_txt.setText(self.argument)
-
-        self.buttonBox.accepted.connect(self.add_hotkey)
-
-        self.add_combination.clicked.connect(self.get_combination)
-        self.open_button.released.connect(self.get_file_or_dir)
-        self.mode.currentTextChanged.connect(self.disable_open_btn)
-
-        if self.mode.currentText() == "Type from entered text":
-            self.open_button.setEnabled(False)
-
-    def get_combination(self):
-        try:
-            cb = keyboard.read_hotkey(suppress=False)
-            self.combination.setText(cb)
-        except:
-            pass
-
-    def get_file_or_dir(self):
-        if self.mode.currentText() == "Open directory":
-            file_name_or_dir = str(QFileDialog.getExistingDirectory(directory=r"c:\\"))
-        else:
-            file_name_or_dir = str(QFileDialog.getOpenFileName(directory=r"c:\\")[0])
-
-        self.path_or_txt.setText(file_name_or_dir)
-
-    def add_hotkey(self):
-        keyboard.remove_hotkey(self.old_combination)
-
-        mode = self.mode.currentText()
-        combination = self.combination.text()
-        argument = self.path_or_txt.text()
-        list_of_hotkeys.pop(self.index_of_hotkey_for_edit)
-        list_of_hotkeys.insert(self.index_of_hotkey_for_edit, [combination, mode, argument])
-
-    def disable_open_btn(self):
-        if self.mode.currentText() == "Type from entered text" or self.mode.currentText() == "Open URL":
-            self.open_button.setEnabled(False)
-        else:
-            self.open_button.setEnabled(True)
-
-    def load_theme(self):
-        if dict_of_settings['theme'] == "bright":
-            self.setStyleSheet("""
-            QDialog {
-                background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
-            }
-
-            QLabel {
-                color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-
-            QLineEdit {
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            """)
-        else:
-            self.setStyleSheet("""
-            QDialog {
-                background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
-            }
-
-            QLabel {
-                color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-
             QLineEdit {
                 font-family: """ + dict_of_settings['font'] + """;
                 font-size: """ + str(dict_of_settings['font_size']) + """px
@@ -467,16 +412,26 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
     # ---------Open different windows-----------------
     def open_add_window(self):
-        add_window = AddWindow()
+        add_window = AddAndEditWindow(is_edit=False)
         add_window.setModal(True)
         dialog_window = add_window.exec_()
 
+        with open(JS_HOTKEYS) as file:
+            list_of_hotkeys = json.load(file)
+
         if dialog_window == QDialog.Accepted:
             if list_of_hotkeys[-1][0] != "":
-                self.add_hotkey_to_table_and_save_it()
+                self.add_hotkey_to_table()
                 self.create_hotkeys(list_of_hotkeys[-1])
             else:
                 list_of_hotkeys.pop(-1)
+
+                write_hotkeys_json(list_of_hotkeys)
+
+        elif dialog_window == QDialog.Rejected:
+            list_of_hotkeys.pop(-1)
+
+            write_hotkeys_json(list_of_hotkeys)
 
     @staticmethod
     def open_settings_window():
@@ -492,46 +447,54 @@ class MainInterface(QMainWindow, Ui_MainWindow):
     def open_edit_window(self):
         index = self.tableWidget.currentRow()
         if index != -1:
-            edit_window = EditWindow(index)
+            edit_window = AddAndEditWindow(is_edit=True, index_of_hotkey_for_edit=index)
             edit_window.setModal(True)
             dialog_window = edit_window.exec_()
 
+            with open(JS_HOTKEYS) as file:
+                list_of_hotkeys = json.load(file)
+
             if dialog_window == QDialog.Accepted:
                 if list_of_hotkeys[index][0] != "":
-                    self.update_hotkey_in_table_and_save_it(index, list_of_hotkeys[index])
+                    self.update_hotkey_in_table(index, list_of_hotkeys[index])
                     self.create_hotkeys(list_of_hotkeys[index])
                 else:
-                    list_of_hotkeys.pop(index)
+                    edit_window.on_reject(index)
+            elif dialog_window == QDialog.Rejected:
+                edit_window.on_reject(index)
     # ------------------------------------------------
 
     # --------Work with table-------------------------
-    def add_hotkey_to_table_and_save_it(self):
+    def add_hotkey_to_table(self):
         self.tableWidget.insertRow(self.tableWidget.rowCount())
 
-        for i_r, e in enumerate(list_of_hotkeys):
-            for i_e, item in enumerate(e):
-                self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+        with open(JS_HOTKEYS) as file_hotkeys:
+            list_of_hotkeys = json.load(file_hotkeys)
+            for i_r, e in enumerate(list_of_hotkeys):
+                for i_e, item in enumerate(e):
+                    self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
 
-        self.tableWidget.resizeColumnsToContents()
-        write_hotkeys_json()
+            self.tableWidget.resizeColumnsToContents()
 
-    def update_hotkey_in_table_and_save_it(self, index, element):
+    def update_hotkey_in_table(self, index, element):
         for column, item in enumerate(element):
             self.tableWidget.setItem(index, column, QtWidgets.QTableWidgetItem(item))
-        write_hotkeys_json()
     # ------------------------------------------------
 
     # --------Some "system" methods-------------------
     def load_saved_hotkeys(self):
-        for i in range(len(list_of_hotkeys)):
-            self.tableWidget.insertRow(self.tableWidget.rowCount())
+        with open(JS_HOTKEYS) as file_hotkeys:
+            list_of_hotkeys = json.load(file_hotkeys)
 
-        for i_r, e in enumerate(list_of_hotkeys):
-            for i_e, item in enumerate(e):
-                self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+            for i in range(len(list_of_hotkeys)):
+                self.tableWidget.insertRow(self.tableWidget.rowCount())
 
-            self.tableWidget.resizeColumnsToContents()
-            self.create_hotkeys(e)
+            for i_r, e in enumerate(list_of_hotkeys):
+                for i_e, item in enumerate(e):
+                    self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+
+                self.tableWidget.resizeColumnsToContents()
+                self.create_hotkeys(e)
 
     @staticmethod
     def create_hotkeys(element):
@@ -557,9 +520,13 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         index = self.tableWidget.currentRow()
         if index != -1:
             self.tableWidget.removeRow(index)
-            keyboard.remove_hotkey(list_of_hotkeys[index][0])
-            list_of_hotkeys.pop(index)
-            write_hotkeys_json()
+
+            with open(JS_HOTKEYS) as file_hotkeys:
+                list_of_hotkeys = json.load(file_hotkeys)
+                keyboard.remove_hotkey(list_of_hotkeys[index][0])
+                list_of_hotkeys.pop(index)
+
+                write_hotkeys_json(list_of_hotkeys)
 # ------------------------------------------------
 
 
@@ -571,17 +538,6 @@ def get_colour():
     return str(colour)
 
 
-def read_hotkeys_json():
-    global list_of_hotkeys
-    with open(JS_HOTKEYS) as file:
-        list_of_hotkeys = json.load(file)
-
-
-def write_hotkeys_json():
-    with open(JS_HOTKEYS, 'w') as file:
-        json.dump(list_of_hotkeys, file)
-
-
 def read_settings_json():
     global dict_of_settings
     with open(JS_SETTINGS) as file:
@@ -590,11 +546,15 @@ def read_settings_json():
 
 def write_settings_json():
     with open(JS_SETTINGS, 'w') as file:
-        json.dump(dict_of_settings, file)
+        json.dump(dict_of_settings, file, indent=2)
+
+
+def write_hotkeys_json(list_of_hotkeys):
+    with open(JS_HOTKEYS, 'w') as file:
+        json.dump(list_of_hotkeys, file, indent=2)
 
 
 async def main():
-    read_hotkeys_json()
     read_settings_json()
 
     app = QtWidgets.QApplication(sys.argv)

@@ -1,1 +1,9 @@
-{"theme": "bright", "font_size": 12, "font": "MS Shell Dlg 2", "bg_colour_bright": "(255, 255, 255)", "font_colour_bright": "(0, 0, 0)", "bg_colour_dark": "(43, 43, 43)", "font_colour_dark": "(214, 214, 214)"}
+{
+  "theme": "bright",
+  "font_size": 12,
+  "font": "MS Shell Dlg 2",
+  "bg_colour_bright": "(255, 255, 255)",
+  "font_colour_bright": "(0, 0, 0)",
+  "bg_colour_dark": "(43, 43, 43)",
+  "font_colour_dark": "(214, 214, 214)"
+}
