@@ -1,7 +1,8 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QDialog, QSystemTrayIcon, QAction, qApp, QMenu
-from PyQt5.QtWidgets import QFileDialog, QColorDialog, QDialogButtonBox
+from PyQt5.QtWidgets import QFileDialog, QColorDialog, QDialogButtonBox, QMessageBox
+from PyQt5.QtCore import Qt
 
 from interface import Ui_MainWindow
 from add_window import Ui_Dialog
@@ -17,6 +18,16 @@ import sys
 
 JS_HOTKEYS = "hotkeys.json"
 JS_SETTINGS = "settings.json"
+
+CSS_MAIN_BRIGHT = "css/main_interface_bright.fcss"
+CSS_MAIN_DARK = "css/main_interface_dark.fcss"
+
+CSS_ADD_WINDOW_BRIGHT = "css/add_window_bright.fcss"
+CSS_ADD_WINDOW_DARK = "css/add_window_dark.fcss"
+
+CSS_SETTINGS_BRIGHT = "css/settings_bright.fcss"
+CSS_SETTINGS_DARK = "css/settings_dark.fcss"
+
 DEFAULT_SETTINGS = {"bg_colour_bright": "(255, 255, 255)",
                     "font_colour_bright": "(0, 0, 0)",
                     "bg_colour_dark": "(43, 43, 43)",
@@ -40,8 +51,6 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
                 self.old_combination,\
                 self.operating_mode,\
                 self.argument = json.load(file_hotkeys)[self.index_of_hotkey_for_edit]
-
-            # self.old_combination, self.operating_mode, self.argument = list_of_hotkeys_del[index_of_hotkey_for_edit]
 
             self.mode.setCurrentText(self.operating_mode)
             self.combination.setText(self.old_combination)
@@ -106,39 +115,11 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
 
     def load_theme(self):
         if dict_of_settings['theme'] == "bright":
-            self.setStyleSheet("""
-            QDialog {
-                background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
-            }
-            
-            QLabel {
-                color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            
-            QLineEdit {
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            """)
+            with open(CSS_ADD_WINDOW_BRIGHT) as file:
+                self.setStyleSheet(eval(file.read()))
         else:
-            self.setStyleSheet("""
-            QDialog {
-                background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
-            }
-            
-            QLabel {
-                color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            
-            QLineEdit {
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            """)
+            with open(CSS_ADD_WINDOW_DARK) as file:
+                self.setStyleSheet(eval(file.read()))
 
 
 class SettingsWindow(QDialog, Ui_settings_window):
@@ -182,93 +163,24 @@ class SettingsWindow(QDialog, Ui_settings_window):
 # ------------------------------------------------
 
     def load_graphic_display_settings(self):
-        self.showed_bg_colour_bright.setStyleSheet("QFrame{"
-                                                   "background-color: rgb"+dict_of_settings['bg_colour_bright']+"}")
-        self.showed_font_colour_bright.setStyleSheet("QFrame{"
-                                                     "background-color: rgb"+dict_of_settings['font_colour_bright']+"}")
-        self.showed_bg_colour_dark.setStyleSheet("QFrame{"
-                                                 "background-color: rgb"+dict_of_settings['bg_colour_dark']+"}")
-        self.showed_font_colour_dark.setStyleSheet("QFrame{"
-                                                   "background-color: rgb"+dict_of_settings['font_colour_dark']+"}")
+
+        template = "QFrame{background-color: rgb"
+
+        self.showed_bg_colour_bright.setStyleSheet(template + dict_of_settings['bg_colour_bright'] + "}")
+        self.showed_font_colour_bright.setStyleSheet(template + dict_of_settings['font_colour_bright'] + "}")
+        self.showed_bg_colour_dark.setStyleSheet(template + dict_of_settings['bg_colour_dark'] + "}")
+        self.showed_font_colour_dark.setStyleSheet(template + dict_of_settings['font_colour_dark'] + "}")
 
         if dict_of_settings['theme'] == "bright":
             self.bright_theme_btn.setChecked(True)
 
-            self.setStyleSheet("""
-            QDialog {
-                background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
-            }
-            
-            QLabel {
-                color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            
-            #tab {
-                background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """
-            }
-            
-            #tab_2 {
-                background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """
-            }
-            
-            QRadioButton {
-                color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            
-            QTabBar::tab {
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: 11px
-            }
-            
-            QGroupBox {
-                color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            """)
+            with open(CSS_SETTINGS_BRIGHT) as file:
+                self.setStyleSheet(eval(file.read()))
         else:
             self.dark_theme_btn.setChecked(True)
 
-            self.setStyleSheet("""
-            QDialog {
-                background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
-            }
-
-            QLabel {
-                color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            
-            #tab {
-                background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """
-            }
-            
-            #tab_2 {
-                background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """
-            }
-            
-            QRadioButton {
-                color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            
-            QTabBar::tab {
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: 11px
-            }
-            
-            QGroupBox {
-                color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-                font-family: """ + dict_of_settings['font'] + """;
-                font-size: """ + str(dict_of_settings['font_size']) + """px
-            }
-            """)
+            with open(CSS_SETTINGS_DARK) as file:
+                self.setStyleSheet(eval(file.read()))
 
     def on_accepted(self):
         dict_of_settings['font'] = self.font_type.currentFont().family()
@@ -292,6 +204,8 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         super(MainInterface, self).__init__()
         self.setupUi(self)
 
+        self.is_closing = False
+
         self.load_saved_hotkeys()
         self.load_settings()
 
@@ -311,7 +225,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         show_action = QAction("Show", self)
         quit_action = QAction("Exit", self)
 
-        show_action.triggered.connect(self.show)
+        show_action.triggered.connect(self.show_main_window)
         quit_action.triggered.connect(qApp.quit)
 
         tray_menu = QMenu()
@@ -329,85 +243,21 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         elif dict_of_settings['theme'] == "dark":
             self.setting_dark()
 
-    def setting_dark(self):
-        self.setStyleSheet("""
-        QMainWindow{
-        background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """
-        }
-        
-        QLabel {
-            color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-            font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
-        }
-
-        #tableWidget {
-            color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-            background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
-            selection-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
-            selection-background-color: #D6D6D6;
-            font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
-        }
-        
-        #menubar {
-            color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-            background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
-            font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
-        }
-        
-        #menuFile {
-            color: rgb""" + dict_of_settings['font_colour_dark'] + """;
-            background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
-            font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
-        }
-        """)
-
-        self.plus_button.setIcon(QIcon("images/plus-white.png"))
-        self.minus_button.setIcon(QIcon("images/minus-white.png"))
-        self.edit_button.setIcon(QIcon("images/pencil-white.png"))
-
     def setting_bright(self):
-        self.setStyleSheet("""
-        QMainWindow {
-            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """
-        }
-
-        QLabel {
-            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-            font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
-        }
-        
-        #tableWidget {
-            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
-            selection-color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-            selection-background-color: #D6D6D6;
-            font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
-        }
-        
-        #menubar {
-            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
-            font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
-        }
-        
-        #menuFile {
-            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
-            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
-            font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
-        }
-        """)
+        with open(CSS_ADD_WINDOW_BRIGHT) as file:
+            self.setStyleSheet(eval(file.read()))
 
         self.plus_button.setIcon(QIcon("images/plus-black.png"))
         self.minus_button.setIcon(QIcon("images/minus-black.png"))
         self.edit_button.setIcon(QIcon("images/pencil-black.png"))
+
+    def setting_dark(self):
+        with open(CSS_MAIN_DARK) as file:
+            self.setStyleSheet(eval(file.read()))
+
+        self.plus_button.setIcon(QIcon("images/plus-white.png"))
+        self.minus_button.setIcon(QIcon("images/minus-white.png"))
+        self.edit_button.setIcon(QIcon("images/pencil-white.png"))
     # ------------------------------------------------
 
     # ---------Open different windows-----------------
@@ -427,11 +277,6 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                 list_of_hotkeys.pop(-1)
 
                 write_hotkeys_json(list_of_hotkeys)
-
-        elif dialog_window == QDialog.Rejected:
-            list_of_hotkeys.pop(-1)
-
-            write_hotkeys_json(list_of_hotkeys)
 
     @staticmethod
     def open_settings_window():
@@ -462,6 +307,10 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                     edit_window.on_reject(index)
             elif dialog_window == QDialog.Rejected:
                 edit_window.on_reject(index)
+
+    def show_main_window(self):
+        self.show()
+        self.setWindowState(Qt.WindowActive)
     # ------------------------------------------------
 
     # --------Work with table-------------------------
@@ -528,6 +377,25 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
                 write_hotkeys_json(list_of_hotkeys)
 # ------------------------------------------------
+
+    def closeEvent(self, event):
+        self.is_closing = True
+
+        close = QMessageBox.question(self,
+                                     "QUIT",
+                                     "Sure?",
+                                     QMessageBox.Yes | QMessageBox.No)
+
+        if close == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+            self.is_closing = False
+
+    def hideEvent(self, event):
+        if not self.is_closing:
+            event.ignore()
+            self.hide()
 
 
 # Open "Colour Chooser"'s window

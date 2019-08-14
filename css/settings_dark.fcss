@@ -1,0 +1,36 @@
+"""
+        QDialog {
+            background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
+        }
+
+        QLabel {
+            color: rgb""" + dict_of_settings['font_colour_dark'] + """;
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+
+        #tab {
+            background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """
+        }
+
+        #tab_2 {
+            background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """
+        }
+
+        QRadioButton {
+            color: rgb""" + dict_of_settings['font_colour_dark'] + """;
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+
+        QTabBar::tab {
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: 11px
+        }
+
+        QGroupBox {
+            color: rgb""" + dict_of_settings['font_colour_dark'] + """;
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+"""

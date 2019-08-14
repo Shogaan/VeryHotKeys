@@ -1,0 +1,38 @@
+"""
+        QMainWindow {
+            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """
+        }
+
+        QLabel {
+            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+
+        QMessageBox {
+            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """
+        }
+
+        #tableWidget {
+            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
+            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+            selection-color: rgb""" + dict_of_settings['font_colour_bright'] + """;
+            selection-background-color: #D6D6D6;
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+
+        #menubar {
+            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
+            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+
+        #menuFile {
+            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
+            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+"""
