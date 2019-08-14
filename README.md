@@ -4,10 +4,21 @@ Windows' app for creating shortcuts.
 
 ## Installing
 
-First of all, you can clone it by Git
+First of all, if you want to **customize** a code, you can clone it by Git
 ```
 git clone https://github.com/Shogaan/VeryHotKeys.git
 ```
+
+You need to have installed python3.6. Then in project's folder open cmd(**I REALLY recommend to use Windows**). Create virtualenv by
+```bash
+pip install virtualenv
+virtualenv venv
+```
+Then activate it by `venv\Scripts\activate.bat` and, finally, install requirements
+```bash
+pip install -r requirements.txt
+```
+To launch the app you need to have activated venv and in cmd type `python main.py`
 
 Second way is using exe-files:
 
@@ -17,11 +28,13 @@ Second way is using exe-files:
 http://www.mediafire.com/file/voc3vgbegcyjypq/Very_Hot_Keys%2528portable%2529_v1-1.zip/file
 ```
 
-#### Installing version
+#### Installation version
 
 ```
 http://www.mediafire.com/file/8mzg2ky1audn9h2/very-hot-keys-setup-1-1.exe/file
 ```
+
+For more information check [wiki](https://github.com/Shogaan/VeryHotKeys/wiki/)
 
 ## New in v1.1
 
