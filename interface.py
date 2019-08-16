@@ -78,7 +78,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setTabKeyNavigation(False)
         self.tableWidget.setProperty("showDropIndicator", False)
         self.tableWidget.setDragDropOverwriteMode(False)
-        self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidget.setCornerButtonEnabled(False)
         self.tableWidget.setObjectName("tableWidget")

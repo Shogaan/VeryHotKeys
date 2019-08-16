@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QDialog, QSystemTrayIcon, QAction, qApp, QMenu
 from PyQt5.QtWidgets import QFileDialog, QColorDialog, QDialogButtonBox, QMessageBox
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QItemSelectionModel
 
 from interface import Ui_MainWindow
 from add_window import Ui_Dialog
@@ -123,11 +123,14 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
 
 
 class SettingsWindow(QDialog, Ui_settings_window):
+
+    template = "QFrame{background-color: rgb"
+
     def __init__(self):
         super(SettingsWindow, self).__init__()
         self.setupUi(self)
 
-        self.load_graphic_display_settings()
+        self.load_graphic_display_settings(False)
 
         self.btn_choose_bg_colour_bright.clicked.connect(self.get_bg_colour_bright)
         self.btn_choose_font_colour_bright.clicked.connect(self.get_font_colour_bright)
@@ -143,44 +146,38 @@ class SettingsWindow(QDialog, Ui_settings_window):
 # --------Show choosed colours--------------------
     def get_bg_colour_bright(self):
         dict_of_settings['bg_colour_bright'] = get_colour()
-        self.showed_bg_colour_bright.setStyleSheet("QFrame{"
-                                                   "background-color: rgb"+dict_of_settings['bg_colour_bright']+"}")
+        self.showed_bg_colour_bright.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
 
     def get_font_colour_bright(self):
         dict_of_settings['font_colour_bright'] = get_colour()
-        self.showed_font_colour_bright.setStyleSheet("QFrame{"
-                                                     "background-color: rgb"+dict_of_settings['font_colour_bright']+"}")
+        self.showed_font_colour_bright.setStyleSheet(self.template + dict_of_settings['font_colour_bright'] + "}")
 
     def get_bg_colour_dark(self):
         dict_of_settings['bg_colour_bright'] = get_colour()
-        self.showed_bg_colour_dark.setStyleSheet("QFrame{"
-                                                 "background-color: rgb"+dict_of_settings['bg_colour_bright']+"}")
+        self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
 
     def get_font_colour_dark(self):
         dict_of_settings['font_colour_bright'] = get_colour()
-        self.showed_font_colour_dark.setStyleSheet("QFrame{"
-                                                   "background-color: rgb"+dict_of_settings['font_colour_dark']+"}")
+        self.showed_font_colour_dark.setStyleSheet(self.template + dict_of_settings['font_colour_dark'] + "}")
 # ------------------------------------------------
 
-    def load_graphic_display_settings(self):
+    def load_graphic_display_settings(self, is_reset: bool):
+        self.showed_bg_colour_bright.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
+        self.showed_font_colour_bright.setStyleSheet(self.template + dict_of_settings['font_colour_bright'] + "}")
+        self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_dark'] + "}")
+        self.showed_font_colour_dark.setStyleSheet(self.template + dict_of_settings['font_colour_dark'] + "}")
 
-        template = "QFrame{background-color: rgb"
+        if not is_reset:
+            if dict_of_settings['theme'] == "bright":
+                self.bright_theme_btn.setChecked(True)
 
-        self.showed_bg_colour_bright.setStyleSheet(template + dict_of_settings['bg_colour_bright'] + "}")
-        self.showed_font_colour_bright.setStyleSheet(template + dict_of_settings['font_colour_bright'] + "}")
-        self.showed_bg_colour_dark.setStyleSheet(template + dict_of_settings['bg_colour_dark'] + "}")
-        self.showed_font_colour_dark.setStyleSheet(template + dict_of_settings['font_colour_dark'] + "}")
+                with open(CSS_SETTINGS_BRIGHT) as file:
+                    self.setStyleSheet(eval(file.read()))
+            elif dict_of_settings['theme'] == "dark":
+                self.dark_theme_btn.setChecked(True)
 
-        if dict_of_settings['theme'] == "bright":
-            self.bright_theme_btn.setChecked(True)
-
-            with open(CSS_SETTINGS_BRIGHT) as file:
-                self.setStyleSheet(eval(file.read()))
-        else:
-            self.dark_theme_btn.setChecked(True)
-
-            with open(CSS_SETTINGS_DARK) as file:
-                self.setStyleSheet(eval(file.read()))
+                with open(CSS_SETTINGS_DARK) as file:
+                    self.setStyleSheet(eval(file.read()))
 
     def on_accepted(self):
         dict_of_settings['font'] = self.font_type.currentFont().family()
@@ -195,8 +192,8 @@ class SettingsWindow(QDialog, Ui_settings_window):
     def on_reset(self):
         for name, value in DEFAULT_SETTINGS.items():
             dict_of_settings[name] = value
-        write_settings_json()
-        self.load_graphic_display_settings()
+
+        self.load_graphic_display_settings(True)
 
 
 class MainInterface(QMainWindow, Ui_MainWindow):
@@ -244,7 +241,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             self.setting_dark()
 
     def setting_bright(self):
-        with open(CSS_ADD_WINDOW_BRIGHT) as file:
+        with open(CSS_MAIN_BRIGHT) as file:
             self.setStyleSheet(eval(file.read()))
 
         self.plus_button.setIcon(QIcon("images/plus-black.png"))
@@ -290,7 +287,10 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             read_settings_json()
 
     def open_edit_window(self):
-        index = self.tableWidget.currentRow()
+        selected_row = self.tableWidget.selectionModel().selectedRows()
+
+        index = selected_row[0].row() if selected_row != [] else -1
+
         if index != -1:
             edit_window = AddAndEditWindow(is_edit=True, index_of_hotkey_for_edit=index)
             edit_window.setModal(True)
@@ -366,7 +366,9 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         eval(f"keyboard.add_hotkey('{combination}', {mode}, args=['{argument}'], suppress=True)")
 
     def delete(self):
-        index = self.tableWidget.currentRow()
+        selected_row = self.tableWidget.selectionModel().selectedRows()
+
+        index = selected_row[0].row() if selected_row != [] else -1
         if index != -1:
             self.tableWidget.removeRow(index)
 
