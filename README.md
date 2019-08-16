@@ -34,7 +34,7 @@ http://www.mediafire.com/file/voc3vgbegcyjypq/Very_Hot_Keys%2528portable%2529_v1
 http://www.mediafire.com/file/8mzg2ky1audn9h2/very-hot-keys-setup-1-1.exe/file
 ```
 
-For more information check [wiki](https://github.com/Shogaan/VeryHotKeys/wiki/)
+For more information check [wiki](https://github.com/Shogaan/VeryHotKeys/wiki/Installation-and-converting-to-exe)
 
 ## New in v1.1
 
