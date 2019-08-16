@@ -33,6 +33,11 @@ DEFAULT_SETTINGS = {"bg_colour_bright": "(255, 255, 255)",
                     "bg_colour_dark": "(43, 43, 43)",
                     "font_colour_dark": "(214, 214, 214)"}
 
+RUS_SYMBOLS = u"ёЁйцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ"
+ENG_SYMBOLS = u"""`~qwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>"""
+
+TRANSLATE_TABLE = str.maketrans(RUS_SYMBOLS, ENG_SYMBOLS)
+
 dict_of_settings = {}
 
 
@@ -65,7 +70,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
     def get_combination(self):
         try:
             cb = keyboard.read_hotkey(suppress=False)
-            self.combination.setText(cb)
+            self.combination.setText(cb.translate(TRANSLATE_TABLE))
         except:
             pass
 
