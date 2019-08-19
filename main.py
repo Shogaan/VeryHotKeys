@@ -1,8 +1,10 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QDialog, QSystemTrayIcon, QAction, qApp, QMenu
-from PyQt5.QtWidgets import QFileDialog, QColorDialog, QDialogButtonBox, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QColorDialog, QDialogButtonBox, QMessageBox, QCheckBox
 from PyQt5.QtCore import Qt, QItemSelectionModel
+
+from pathlib import Path
 
 from interface import Ui_MainWindow
 from add_window import Ui_Dialog
@@ -36,7 +38,7 @@ DEFAULT_SETTINGS = {"bg_colour_bright": "(255, 255, 255)",
 RUS_SYMBOLS = u"ёЁйцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ"
 ENG_SYMBOLS = u"""`~qwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>"""
 
-TRANSLATE_TABLE = str.maketrans(RUS_SYMBOLS, ENG_SYMBOLS)
+TRANSLATE_TABLE_RUS_ENG = str.maketrans(RUS_SYMBOLS, ENG_SYMBOLS)
 
 dict_of_settings = {}
 
@@ -70,7 +72,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
     def get_combination(self):
         try:
             cb = keyboard.read_hotkey(suppress=False)
-            self.combination.setText(cb.translate(TRANSLATE_TABLE))
+            self.combination.setText(cb.translate(TRANSLATE_TABLE_RUS_ENG))
         except:
             pass
 
@@ -345,7 +347,16 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
             for i_r, e in enumerate(list_of_hotkeys):
                 for i_e, item in enumerate(e):
-                    self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+
+                    if i_e == 2:
+                        path = Path(item)
+                        if path.exists():
+                            self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+                        else:
+                            self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
+
+                    else:
+                        self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
 
                 self.tableWidget.resizeColumnsToContents()
                 self.create_hotkeys(e)
@@ -386,18 +397,29 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 # ------------------------------------------------
 
     def closeEvent(self, event):
-        self.is_closing = True
+        if dict_of_settings['show_message_on_exit']:
+            checkbox = QCheckBox(parent=self, text="Don`t ask me again")
 
-        close = QMessageBox.question(self,
-                                     "QUIT",
-                                     "Sure?",
-                                     QMessageBox.Yes | QMessageBox.No)
+            question_on_close = QMessageBox(self)
+            question_on_close.setWindowTitle("QUIT")
+            question_on_close.setText("Sure?\nThe hotkeys won't working!")
+            question_on_close.setIcon(QMessageBox.Icon.Question)
+            question_on_close.addButton(QMessageBox.Yes)
+            question_on_close.addButton(QMessageBox.No)
+            question_on_close.setCheckBox(checkbox)
 
-        if close == QMessageBox.Yes:
-            event.accept()
-        else:
-            event.ignore()
-            self.is_closing = False
+            close = question_on_close.exec_()
+
+            if checkbox.isChecked():
+                dict_of_settings['show_message_on_exit'] = False
+                write_settings_json()
+
+            if close == QMessageBox.Yes:
+                self.is_closing = True
+                event.accept()
+            else:
+                event.ignore()
+        else: event.accept()
 
     def hideEvent(self, event):
         if not self.is_closing:
@@ -405,7 +427,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             self.hide()
 
 
-# Open "Colour Chooser"'s window
+# Open "Colour Chooser"`s window
 def get_colour():
     colour = QColorDialog.getColor().getRgb()
     colour = colour[:-1]
