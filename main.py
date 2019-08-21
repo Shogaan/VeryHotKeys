@@ -363,10 +363,17 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
     @staticmethod
     def create_hotkeys(element):
+        create_hotkey = True
+
         combination, mode_name, argument = element
 
         if mode_name == "Open file" or mode_name == "Open directory":
+            path = Path(argument)
+
             mode = "os.startfile"
+
+            if not path.exists():
+                create_hotkey = False
 
         elif mode_name == "Open URL":
             mode = "webbrowser.open"
@@ -374,12 +381,18 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         elif mode_name == "Type from entered text":
             mode = "keyboard.write"
 
-        else:
-            with open(argument) as file:
-                argument = file.read()
+        elif mode_name == "Type from file":
+            path = Path(argument)
+
+            if path.exists():
+                with open(argument) as file:
+                    argument = file.read()
+            else:
+                create_hotkey = False
             mode = "keyboard.write"
 
-        eval(f"keyboard.add_hotkey('{combination}', {mode}, args=['{argument}'], suppress=True)")
+        if create_hotkey:
+            eval(f"keyboard.add_hotkey('{combination}', {mode}, args=['{argument}'], suppress=True)")
 
     def delete(self):
         selected_row = self.tableWidget.selectionModel().selectedRows()
@@ -390,7 +403,9 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
             with open(JS_HOTKEYS) as file_hotkeys:
                 list_of_hotkeys = json.load(file_hotkeys)
-                keyboard.remove_hotkey(list_of_hotkeys[index][0])
+                try:
+                    keyboard.remove_hotkey(list_of_hotkeys[index][0])
+                except: pass
                 list_of_hotkeys.pop(index)
 
                 write_hotkeys_json(list_of_hotkeys)
