@@ -25,20 +25,40 @@ Second way is using exe-files:
 #### Portable version
 
 ```
-http://www.mediafire.com/file/voc3vgbegcyjypq/Very_Hot_Keys%2528portable%2529_v1-1.zip/file
+http://www.mediafire.com/file/dsq0m98da5b3xwr/Very_Hot_Keys%2528portable%2529_v1.0.1.zip/file
 ```
 
 #### Installation version
 
 ```
-http://www.mediafire.com/file/8mzg2ky1audn9h2/very-hot-keys-setup-1-1.exe/file
+http://www.mediafire.com/file/6af370swh7texek/very-hot-keys-setup-1-0-1.exe/file
 ```
 
 For more information check [wiki](https://github.com/Shogaan/VeryHotKeys/wiki/Installation-and-converting-to-exe)
 
+## New in v1.0.1
+
+### Added:
+* Open URLs
+* Correct opening links in "Open file" mode
+* Quit window
+* Hide to tray when minimized
+* Checking does file exist
+
+### Fixed:
+
+* Selection, now working correctly
+* Open Edit window
+* Bug with russian letters
+
+### Rewritten:
+
+* Work with Edit Window
+* Work with hotkeys inside the code
+
 ## New in v1.1
 
-* Added dark theme and little opportunity for customization
+* Added dark theme and small customization option
 * Added editing of hotkeys(shortcuts)
 * Now you can open dirs
 * Fixed crashes when you two times click "Create combination" in "Add window"

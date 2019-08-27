@@ -434,7 +434,8 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                 event.accept()
             else:
                 event.ignore()
-        else: event.accept()
+        else:
+            self.is_closing = True
 
     def hideEvent(self, event):
         if not self.is_closing:
