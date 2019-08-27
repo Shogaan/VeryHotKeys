@@ -25,13 +25,13 @@ Second way is using exe-files:
 #### Portable version
 
 ```
-http://www.mediafire.com/file/dsq0m98da5b3xwr/Very_Hot_Keys%2528portable%2529_v1.0.1.zip/file
+https://www.mediafire.com/file/qcipqaruxg9czt4/Very_Hot_Keys%28portable%29_v1.0.1.zip/file
 ```
 
 #### Installation version
 
 ```
-http://www.mediafire.com/file/6af370swh7texek/very-hot-keys-setup-1-0-1.exe/file
+https://www.mediafire.com/file/0mix8hpy1031bd4/very-hot-keys-setup-1-0-1.exe/file
 ```
 
 For more information check [wiki](https://github.com/Shogaan/VeryHotKeys/wiki/Installation-and-converting-to-exe)
