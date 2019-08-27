@@ -9,7 +9,6 @@ from pathlib import Path
 from interface import Ui_MainWindow
 from add_window import Ui_Dialog
 from settings import Ui_settings_window
-from edit_window import Ui_edit_window
 
 import keyboard
 import webbrowser
@@ -350,10 +349,13 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
                     if i_e == 2:
                         path = Path(item)
-                        if path.exists():
+                        try:
+                            if path.exists():
+                                self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+                            else:
+                                self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
+                        except:
                             self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
-                        else:
-                            self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
 
                     else:
                         self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
