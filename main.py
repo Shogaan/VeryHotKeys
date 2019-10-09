@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QDialog, QSystemTrayIcon, QAction, qApp, QMenu
 from PyQt5.QtWidgets import QFileDialog, QColorDialog, QDialogButtonBox, QMessageBox, QCheckBox
@@ -19,6 +19,7 @@ import sys
 
 JS_HOTKEYS = "hotkeys.json"
 JS_SETTINGS = "settings.json"
+JS_KEYS_TO_SIMULATE = "keys.json"
 
 CSS_MAIN_BRIGHT = "css/main_interface_bright.fcss"
 CSS_MAIN_DARK = "css/main_interface_dark.fcss"
@@ -52,13 +53,19 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
         self.is_edit = kwargs['is_edit']
         self.index_of_hotkey_for_edit = kwargs['index_of_hotkey_for_edit'] if self.is_edit else None
 
-        if kwargs['is_edit']:
+        if self.is_edit:
             with open(JS_HOTKEYS) as file_hotkeys:
+                self.old_is_enable,\
+                self.old_has_suppress,\
                 self.old_combination,\
                 self.operating_mode,\
                 self.argument = json.load(file_hotkeys)[self.index_of_hotkey_for_edit]
 
+                self.is_enable_check.setChecked(self.old_is_enable)
+                self.suppress_check.setChecked(self.old_has_suppress)
+
             self.mode.setCurrentText(self.operating_mode)
+            self.redraw_interface()
             self.combination.setText(self.old_combination)
             self.path_or_txt.setText(self.argument)
 
@@ -66,7 +73,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
 
         self.add_combination.clicked.connect(self.get_combination)
         self.open_button.clicked.connect(self.get_file_or_dir)
-        self.mode.currentTextChanged.connect(self.disable_open_btn)
+        self.mode.currentTextChanged.connect(self.redraw_interface)
 
     def get_combination(self):
         try:
@@ -85,35 +92,64 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
         self.path_or_txt.setText(file_name_or_dir)
 
     def add_hotkey(self): # dif
-        if self.is_edit:
+        if self.is_edit and self.old_is_enable:
             keyboard.remove_hotkey(self.old_combination)
 
+        is_enable = self.is_enable_check.isChecked()
+        has_suppress = self.suppress_check.isChecked()
         mode = self.mode.currentText()
         combination = self.combination.text()
-        argument = self.path_or_txt.text()
+        argument = self.button_to_simulate.currentText() if mode == "Simulate pressing button"\
+                                                                                            else self.path_or_txt.text()
 
         if self.is_edit:
             with open(JS_HOTKEYS) as file_hotkeys:
                 list_of_hotkeys = json.load(file_hotkeys)
-                list_of_hotkeys[self.index_of_hotkey_for_edit] = [combination, mode, argument]
+                list_of_hotkeys[self.index_of_hotkey_for_edit] = [is_enable, has_suppress, combination, mode, argument]
 
                 write_hotkeys_json(list_of_hotkeys)
 
         else:
             with open(JS_HOTKEYS) as file_hotkeys:
                 list_of_hotkeys = json.load(file_hotkeys)
-                list_of_hotkeys.append([combination, mode, argument])
+                list_of_hotkeys.append([is_enable, has_suppress, combination, mode, argument])
 
                 write_hotkeys_json(list_of_hotkeys)
 
     def on_reject(self, index):
         with open(JS_HOTKEYS) as file:
             list_of_hotkeys = json.load(file)
-            list_of_hotkeys[index] = [self.old_combination, self.operating_mode, self.argument]
+            list_of_hotkeys[index] = [self.old_is_enable, self.old_has_suppress,
+                                      self.old_combination, self.operating_mode, self.argument]
 
             write_hotkeys_json(list_of_hotkeys)
 
-    def disable_open_btn(self):
+    def redraw_interface(self):
+        if self.mode.currentText() == "Simulate pressing button":
+            self.path_or_txt.hide()
+            self.open_button.hide()
+
+            with open(JS_KEYS_TO_SIMULATE, "r") as file_keys:
+                keys = json.load(file_keys)
+
+            self.button_to_simulate = QtWidgets.QComboBox()
+            self.button_to_simulate.setObjectName("button_to_simulate")
+
+            for i, key in enumerate(keys):
+                self.button_to_simulate.addItem("")
+                self.button_to_simulate.setItemText(i, QtCore.QCoreApplication.translate("Dialog", key))
+
+            self.horizontalLayout.addWidget(self.button_to_simulate)
+
+        else:
+            try:
+                self.button_to_simulate.hide()
+            except:
+                pass
+
+            self.path_or_txt.show()
+            self.open_button.show()
+
         if self.mode.currentText() == "Type from entered text" or self.mode.currentText() == "Open URL":
             self.open_button.setEnabled(False)
         else:
@@ -306,7 +342,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                 list_of_hotkeys = json.load(file)
 
             if dialog_window == QDialog.Accepted:
-                if list_of_hotkeys[index][0] != "":
+                if list_of_hotkeys[index][2] != "":
                     self.update_hotkey_in_table(index, list_of_hotkeys[index])
                     self.create_hotkeys(list_of_hotkeys[index])
                 else:
@@ -327,13 +363,25 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             list_of_hotkeys = json.load(file_hotkeys)
             for i_r, e in enumerate(list_of_hotkeys):
                 for i_e, item in enumerate(e):
-                    self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+
+                    item_in_table = QtWidgets.QTableWidgetItem(item)
+
+                    if i_e == 0 or i_e == 1:
+                        item_in_table.setCheckState(Qt.Checked if item else Qt.Unchecked)
+                        self.tableWidget.setItem(i_r, i_e, item_in_table)
+                    else:
+                        self.tableWidget.setItem(i_r, i_e, item_in_table)
 
             self.tableWidget.resizeColumnsToContents()
 
     def update_hotkey_in_table(self, index, element):
         for column, item in enumerate(element):
-            self.tableWidget.setItem(index, column, QtWidgets.QTableWidgetItem(item))
+            item_in_table = QtWidgets.QTableWidgetItem(item)
+            if column == 0 or column == 1:
+                item_in_table.setCheckState(Qt.Checked if item else Qt.Unchecked)
+                self.tableWidget.setItem(index, column, item_in_table)
+            else:
+                self.tableWidget.setItem(index, column, item_in_table)
     # ------------------------------------------------
 
     # --------Some "system" methods-------------------
@@ -347,18 +395,24 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             for i_r, e in enumerate(list_of_hotkeys):
                 for i_e, item in enumerate(e):
 
-                    if i_e == 2:
-                        path = Path(item)
-                        try:
-                            if path.exists():
-                                self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
-                            else:
-                                self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
-                        except:
-                            self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+                    item_in_table = QtWidgets.QTableWidgetItem(item)
 
+                    if i_e == 0 or i_e == 1:
+                        item_in_table.setCheckState(Qt.Checked if item else Qt.Unchecked)
+                        self.tableWidget.setItem(i_r, i_e, item_in_table)
                     else:
-                        self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem(item))
+                        if i_e == 4:
+                            path = Path(item)
+                            try:
+                                if path.exists():
+                                    self.tableWidget.setItem(i_r, i_e, item_in_table)
+                                else:
+                                    self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
+                            except:
+                                self.tableWidget.setItem(i_r, i_e, item_in_table)
+
+                        else:
+                            self.tableWidget.setItem(i_r, i_e, item_in_table)
 
                 self.tableWidget.resizeColumnsToContents()
                 self.create_hotkeys(e)
@@ -367,7 +421,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
     def create_hotkeys(element):
         create_hotkey = True
 
-        combination, mode_name, argument = element
+        is_enable, has_suppress, combination, mode_name, argument = element
 
         if mode_name == "Open file" or mode_name == "Open directory":
             path = Path(argument)
@@ -393,8 +447,15 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                 create_hotkey = False
             mode = "keyboard.write"
 
-        if create_hotkey:
-            eval(f"keyboard.add_hotkey('{combination}', {mode}, args=['{argument}'], suppress=True)")
+        elif mode_name == "Simulate pressing button":
+            mode = "keyboard.send"
+
+            with open(JS_KEYS_TO_SIMULATE, 'r') as keys_file:
+                keys = json.load(keys_file)
+                argument = keys[argument]
+
+        if create_hotkey and is_enable:
+            eval(f"keyboard.add_hotkey('{combination}', {mode}, args=['{argument}'], suppress={has_suppress})")
 
     def delete(self):
         selected_row = self.tableWidget.selectionModel().selectedRows()
@@ -406,7 +467,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             with open(JS_HOTKEYS) as file_hotkeys:
                 list_of_hotkeys = json.load(file_hotkeys)
                 try:
-                    keyboard.remove_hotkey(list_of_hotkeys[index][0])
+                    keyboard.remove_hotkey(list_of_hotkeys[index][2])
                 except: pass
                 list_of_hotkeys.pop(index)
 

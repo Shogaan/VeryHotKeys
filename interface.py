@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'interface.ui'
+# Form implementation generated from reading ui file 'uis\interface.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -15,7 +17,7 @@ class Ui_MainWindow(object):
         MainWindow.resize(560, 250)
         MainWindow.setMinimumSize(QtCore.QSize(350, 155))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/logo2.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("./images/logo2.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -38,7 +40,7 @@ class Ui_MainWindow(object):
         self.plus_button.setAutoFillBackground(False)
         self.plus_button.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("images/plus-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("./images/plus-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.plus_button.setIcon(icon1)
         self.plus_button.setCheckable(False)
         self.plus_button.setAutoRepeat(False)
@@ -51,7 +53,7 @@ class Ui_MainWindow(object):
         self.minus_button = QtWidgets.QPushButton(self.centralwidget)
         self.minus_button.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("images/minus-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("./images/minus-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.minus_button.setIcon(icon2)
         self.minus_button.setFlat(True)
         self.minus_button.setObjectName("minus_button")
@@ -59,7 +61,7 @@ class Ui_MainWindow(object):
         self.edit_button = QtWidgets.QPushButton(self.centralwidget)
         self.edit_button.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("images/pencil-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("./images/pencil-black.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.edit_button.setIcon(icon3)
         self.edit_button.setFlat(True)
         self.edit_button.setObjectName("edit_button")
@@ -82,7 +84,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidget.setCornerButtonEnabled(False)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(5)
         self.tableWidget.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
@@ -90,6 +92,10 @@ class Ui_MainWindow(object):
         self.tableWidget.setHorizontalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(4, item)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.tableWidget.verticalHeader().setVisible(False)
         self.verticalLayout.addWidget(self.tableWidget)
@@ -128,10 +134,14 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Very Hot Keys"))
         self.label.setText(_translate("MainWindow", "All hotkeys"))
         item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Combination"))
+        item.setText(_translate("MainWindow", "Enable"))
         item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Operating mode"))
+        item.setText(_translate("MainWindow", "Suppress"))
         item = self.tableWidget.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Combination"))
+        item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Operating mode"))
+        item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Argument"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionSave.setText(_translate("MainWindow", "Save"))
@@ -141,4 +151,3 @@ class Ui_MainWindow(object):
         self.turn_on_dark_theme.setText(_translate("MainWindow", "Dark theme"))
         self.actionSettings.setText(_translate("MainWindow", "Settings"))
         self.actionSettings_.setText(_translate("MainWindow", "Settings"))
-

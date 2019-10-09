@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'add_window.ui'
+# Form implementation generated from reading ui file '.\uis\add_window.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -16,7 +16,7 @@ class Ui_Dialog(object):
         Dialog.resize(700, 100)
         Dialog.setMinimumSize(QtCore.QSize(700, 100))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/logo2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("./images/logo2.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -37,7 +37,10 @@ class Ui_Dialog(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.mode = QtWidgets.QComboBox(Dialog)
+        self.mode.setEditable(False)
+        self.mode.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
         self.mode.setObjectName("mode")
+        self.mode.addItem("")
         self.mode.addItem("")
         self.mode.addItem("")
         self.mode.addItem("")
@@ -62,11 +65,25 @@ class Ui_Dialog(object):
         self.open_button.setObjectName("open_button")
         self.horizontalLayout.addWidget(self.open_button)
         self.verticalLayout.addLayout(self.horizontalLayout)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        spacerItem1 = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem1)
+        self.is_enable_check = QtWidgets.QCheckBox(Dialog)
+        self.is_enable_check.setChecked(True)
+        self.is_enable_check.setObjectName("is_enable_check")
+        self.horizontalLayout_3.addWidget(self.is_enable_check)
+        spacerItem2 = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem2)
+        self.suppress_check = QtWidgets.QCheckBox(Dialog)
+        self.suppress_check.setObjectName("suppress_check")
+        self.horizontalLayout_3.addWidget(self.suppress_check)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.verticalLayout.addWidget(self.buttonBox)
+        self.horizontalLayout_3.addWidget(self.buttonBox)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
 
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)
@@ -85,7 +102,10 @@ class Ui_Dialog(object):
         self.mode.setItemText(2, _translate("Dialog", "Open URL"))
         self.mode.setItemText(3, _translate("Dialog", "Type from file"))
         self.mode.setItemText(4, _translate("Dialog", "Type from entered text"))
+        self.mode.setItemText(5, _translate("Dialog", "Simulate pressing button"))
         self.combination.setToolTip(_translate("Dialog", "<html><head/><body><p>Click the button and then press combination</p></body></html>"))
         self.add_combination.setText(_translate("Dialog", "Create combination"))
         self.path_or_txt.setToolTip(_translate("Dialog", "<html><head/><body><p>If operating mode &quot;Type from entered text&quot; type here your text, but if operating mode &quot;Open file&quot; or &quot;Type from file&quot; press the buttom or just paste here path to file/dir</p></body></html>"))
         self.open_button.setText(_translate("Dialog", "Open"))
+        self.is_enable_check.setText(_translate("Dialog", "Enable"))
+        self.suppress_check.setText(_translate("Dialog", "Suppress"))
