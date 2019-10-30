@@ -400,16 +400,16 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                     if i_e == 0 or i_e == 1:
                         item_in_table.setCheckState(Qt.Checked if item else Qt.Unchecked)
                         self.tableWidget.setItem(i_r, i_e, item_in_table)
+                    elif i_e == 3:
+                        mode = i_e
                     else:
-                        if i_e == 4:
+                        if i_e == 4 and mode in ("Open file", "Open directory", "Type from file"):
                             path = Path(item)
-                            try:
-                                if path.exists():
-                                    self.tableWidget.setItem(i_r, i_e, item_in_table)
-                                else:
-                                    self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
-                            except:
+
+                            if path.exists():
                                 self.tableWidget.setItem(i_r, i_e, item_in_table)
+                            else:
+                                self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
 
                         else:
                             self.tableWidget.setItem(i_r, i_e, item_in_table)
