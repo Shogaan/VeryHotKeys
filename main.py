@@ -252,6 +252,8 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         self.minus_button.clicked.connect(self.delete)
         self.edit_button.clicked.connect(self.open_edit_window)
 
+        self.tableWidget.cellChanged.connect(self.on_cell_changed)
+
         self.actionTo_tray.triggered.connect(self.hide)
         self.actionSettings_.triggered.connect(self.open_settings_window)
 
@@ -374,6 +376,21 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
             self.tableWidget.resizeColumnsToContents()
 
+    def on_cell_changed(self, row, column):
+        if column in (0, 1):
+            with open(JS_HOTKEYS) as file:
+                list_of_hotkeys = json.load(file)
+
+            if list_of_hotkeys[row][0]:
+                temp = list_of_hotkeys[row]
+                keyboard.remove_hotkey(list_of_hotkeys[row][2])
+
+            state = self.tableWidget.item(row, column).checkState()
+            list_of_hotkeys[row][column] = True if state == 2 else False
+
+            write_hotkeys_json(list_of_hotkeys)
+            self.create_hotkeys(list_of_hotkeys[row])
+
     def update_hotkey_in_table(self, index, element):
         for column, item in enumerate(element):
             item_in_table = QtWidgets.QTableWidgetItem(item)
@@ -402,6 +419,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                         self.tableWidget.setItem(i_r, i_e, item_in_table)
                     elif i_e == 3:
                         mode = i_e
+                        self.tableWidget.setItem(i_r, i_e, item_in_table)
                     else:
                         if i_e == 4 and mode in ("Open file", "Open directory", "Type from file"):
                             path = Path(item)
