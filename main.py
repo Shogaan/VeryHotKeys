@@ -91,7 +91,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
 
         self.path_or_txt.setText(file_name_or_dir)
 
-    def add_hotkey(self): # dif
+    def add_hotkey(self):
         if self.is_edit and self.old_is_enable:
             keyboard.remove_hotkey(self.old_combination)
 
@@ -252,7 +252,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         self.minus_button.clicked.connect(self.delete)
         self.edit_button.clicked.connect(self.open_edit_window)
 
-        self.tableWidget.cellChanged.connect(self.on_cell_changed)
+        self.tableWidget.cellClicked.connect(self.on_cell_changed)
 
         self.actionTo_tray.triggered.connect(self.hide)
         self.actionSettings_.triggered.connect(self.open_settings_window)
@@ -311,7 +311,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             list_of_hotkeys = json.load(file)
 
         if dialog_window == QDialog.Accepted:
-            if list_of_hotkeys[-1][0] != "":
+            if list_of_hotkeys[-1][2] != "":
                 self.add_hotkey_to_table()
                 self.create_hotkeys(list_of_hotkeys[-1])
             else:
@@ -363,16 +363,17 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
         with open(JS_HOTKEYS) as file_hotkeys:
             list_of_hotkeys = json.load(file_hotkeys)
-            for i_r, e in enumerate(list_of_hotkeys):
-                for i_e, item in enumerate(e):
 
-                    item_in_table = QtWidgets.QTableWidgetItem(item)
+        for index, e in enumerate(list_of_hotkeys):
+            for column, item in enumerate(e):
 
-                    if i_e == 0 or i_e == 1:
-                        item_in_table.setCheckState(Qt.Checked if item else Qt.Unchecked)
-                        self.tableWidget.setItem(i_r, i_e, item_in_table)
-                    else:
-                        self.tableWidget.setItem(i_r, i_e, item_in_table)
+                item_in_table = QtWidgets.QTableWidgetItem(item)
+
+                if column == 0 or column == 1:
+                    item_in_table.setCheckState(Qt.Checked if item else Qt.Unchecked)
+                    self.tableWidget.setItem(index, column, item_in_table)
+                else:
+                    self.tableWidget.setItem(index, column, item_in_table)
 
             self.tableWidget.resizeColumnsToContents()
 

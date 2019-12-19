@@ -1,5 +1,7 @@
 {
   "Previous song": "previous track",
   "Play/Pause": "play/pause media",
-  "Next song": "next track"
+  "Next song": "next track",
+  "Volume down": "volume down",
+  "Volume up": "volume up"
 }
