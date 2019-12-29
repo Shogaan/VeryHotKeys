@@ -10,35 +10,21 @@ from interface import Ui_MainWindow
 from add_window import Ui_Dialog
 from settings import Ui_settings_window
 
+from modes_create_logic import treat_information_for_creating
+
+from constants import JS_HOTKEYS, JS_SETTINGS, JS_KEYS_TO_SIMULATE
+from constants import CSS_MAIN_BRIGHT, CSS_MAIN_DARK
+from constants import CSS_ADD_WINDOW_BRIGHT, CSS_ADD_WINDOW_DARK
+from constants import CSS_SETTINGS_BRIGHT, CSS_SETTINGS_DARK
+from constants import DEFAULT_SETTINGS
+from constants import TRANSLATE_TABLE_RUS_ENG
+
 import keyboard
 import webbrowser
 import asyncio
 import json
 import os
 import sys
-
-JS_HOTKEYS = "hotkeys.json"
-JS_SETTINGS = "settings.json"
-JS_KEYS_TO_SIMULATE = "keys.json"
-
-CSS_MAIN_BRIGHT = "css/main_interface_bright.fcss"
-CSS_MAIN_DARK = "css/main_interface_dark.fcss"
-
-CSS_ADD_WINDOW_BRIGHT = "css/add_window_bright.fcss"
-CSS_ADD_WINDOW_DARK = "css/add_window_dark.fcss"
-
-CSS_SETTINGS_BRIGHT = "css/settings_bright.fcss"
-CSS_SETTINGS_DARK = "css/settings_dark.fcss"
-
-DEFAULT_SETTINGS = {"bg_colour_bright": "(255, 255, 255)",
-                    "font_colour_bright": "(0, 0, 0)",
-                    "bg_colour_dark": "(43, 43, 43)",
-                    "font_colour_dark": "(214, 214, 214)"}
-
-RUS_SYMBOLS = u"ёЁйцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ"
-ENG_SYMBOLS = u"""`~qwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>"""
-
-TRANSLATE_TABLE_RUS_ENG = str.maketrans(RUS_SYMBOLS, ENG_SYMBOLS)
 
 dict_of_settings = {}
 
@@ -438,40 +424,10 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
     @staticmethod
     def create_hotkeys(element):
-        create_hotkey = True
 
-        is_enable, has_suppress, combination, mode_name, argument = element
+        is_enable, has_suppress, combination, mode, argument = element
 
-        if mode_name == "Open file" or mode_name == "Open directory":
-            path = Path(argument)
-
-            mode = "os.startfile"
-
-            if not path.exists():
-                create_hotkey = False
-
-        elif mode_name == "Open URL":
-            mode = "webbrowser.open"
-
-        elif mode_name == "Type from entered text":
-            mode = "keyboard.write"
-
-        elif mode_name == "Type from file":
-            path = Path(argument)
-
-            if path.exists():
-                with open(argument) as file:
-                    argument = file.read()
-            else:
-                create_hotkey = False
-            mode = "keyboard.write"
-
-        elif mode_name == "Simulate pressing button":
-            mode = "keyboard.send"
-
-            with open(JS_KEYS_TO_SIMULATE, 'r') as keys_file:
-                keys = json.load(keys_file)
-                argument = keys[argument]
+        create_hotkey, mode, argument = treat_information_for_creating(mode, argument)
 
         if create_hotkey and is_enable:
             eval(f"keyboard.add_hotkey('{combination}', {mode}, args=['{argument}'], suppress={has_suppress})")

@@ -1,0 +1,8 @@
+{
+  "Open file": "open_file_directory(argument)",
+  "Open directory": "open_file_directory(argument)",
+  "Open URL": "open_url(argument)",
+  "Type from file": "type_from_file(argument)",
+  "Type from entered text": "type_from_entered(argument)",
+  "Simulate pressing button": "simulate_button(argument)"
+}
