@@ -10,9 +10,7 @@ def treat_information_for_creating(mode_name, argument):
     def check_path(path_to_check):
         path = Path(path_to_check)
 
-        if path.exists():
-            return True
-        return False
+        return path.exists()
 
     def open_file_directory(path):
         if check_path(path):

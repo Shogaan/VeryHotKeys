@@ -1,23 +1,23 @@
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5 import QtWidgets
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QDialog, QSystemTrayIcon, QAction, qApp, QMenu
-from PyQt5.QtWidgets import QFileDialog, QColorDialog, QDialogButtonBox, QMessageBox, QCheckBox
-from PyQt5.QtCore import Qt, QItemSelectionModel
+from PyQt5.QtWidgets import QMessageBox, QCheckBox
+from PyQt5.QtCore import Qt
 
 from pathlib import Path
 
 from interface import Ui_MainWindow
-from add_window import Ui_Dialog
-from settings import Ui_settings_window
+
+from add_and_edit_logic import AddAndEditWindow
+from settings_logic import SettingsWindow
 
 from modes_create_logic import treat_information_for_creating
 
-from constants import JS_HOTKEYS, JS_SETTINGS, JS_KEYS_TO_SIMULATE
+from global_definitions import read_settings_json, write_settings_json
+from global_definitions import write_hotkeys_json
+
+from constants import JS_HOTKEYS
 from constants import CSS_MAIN_BRIGHT, CSS_MAIN_DARK
-from constants import CSS_ADD_WINDOW_BRIGHT, CSS_ADD_WINDOW_DARK
-from constants import CSS_SETTINGS_BRIGHT, CSS_SETTINGS_DARK
-from constants import DEFAULT_SETTINGS
-from constants import TRANSLATE_TABLE_RUS_ENG
 
 import keyboard
 import webbrowser
@@ -26,202 +26,7 @@ import json
 import os
 import sys
 
-dict_of_settings = {}
-
-
-class AddAndEditWindow(QDialog, Ui_Dialog):
-    def __init__(self, **kwargs):
-        super(AddAndEditWindow, self).__init__()
-        self.setupUi(self)
-
-        self.load_theme()
-
-        self.is_edit = kwargs['is_edit']
-        self.index_of_hotkey_for_edit = kwargs['index_of_hotkey_for_edit'] if self.is_edit else None
-
-        if self.is_edit:
-            with open(JS_HOTKEYS) as file_hotkeys:
-                self.old_is_enable,\
-                self.old_has_suppress,\
-                self.old_combination,\
-                self.operating_mode,\
-                self.argument = json.load(file_hotkeys)[self.index_of_hotkey_for_edit]
-
-                self.is_enable_check.setChecked(self.old_is_enable)
-                self.suppress_check.setChecked(self.old_has_suppress)
-
-            self.mode.setCurrentText(self.operating_mode)
-            self.redraw_interface()
-            self.combination.setText(self.old_combination)
-            self.path_or_txt.setText(self.argument)
-
-        self.buttonBox.accepted.connect(self.add_hotkey)
-
-        self.add_combination.clicked.connect(self.get_combination)
-        self.open_button.clicked.connect(self.get_file_or_dir)
-        self.mode.currentTextChanged.connect(self.redraw_interface)
-
-    def get_combination(self):
-        try:
-            cb = keyboard.read_hotkey(suppress=False)
-            self.combination.setText(cb.translate(TRANSLATE_TABLE_RUS_ENG))
-        except:
-            pass
-
-    def get_file_or_dir(self):
-        if self.mode.currentText() == "Open directory":
-            file_name_or_dir = str(QFileDialog.getExistingDirectory(directory=r"c:\\"))
-        else:
-            file_name_or_dir = str(QFileDialog.getOpenFileName(directory=r"c:\\",
-                                                               options=QFileDialog.DontResolveSymlinks)[0])
-
-        self.path_or_txt.setText(file_name_or_dir)
-
-    def add_hotkey(self):
-        if self.is_edit and self.old_is_enable:
-            keyboard.remove_hotkey(self.old_combination)
-
-        is_enable = self.is_enable_check.isChecked()
-        has_suppress = self.suppress_check.isChecked()
-        mode = self.mode.currentText()
-        combination = self.combination.text()
-        argument = self.button_to_simulate.currentText() if mode == "Simulate pressing button"\
-                                                                                            else self.path_or_txt.text()
-
-        if self.is_edit:
-            with open(JS_HOTKEYS) as file_hotkeys:
-                list_of_hotkeys = json.load(file_hotkeys)
-                list_of_hotkeys[self.index_of_hotkey_for_edit] = [is_enable, has_suppress, combination, mode, argument]
-
-                write_hotkeys_json(list_of_hotkeys)
-
-        else:
-            with open(JS_HOTKEYS) as file_hotkeys:
-                list_of_hotkeys = json.load(file_hotkeys)
-                list_of_hotkeys.append([is_enable, has_suppress, combination, mode, argument])
-
-                write_hotkeys_json(list_of_hotkeys)
-
-    def on_reject(self, index):
-        with open(JS_HOTKEYS) as file:
-            list_of_hotkeys = json.load(file)
-            list_of_hotkeys[index] = [self.old_is_enable, self.old_has_suppress,
-                                      self.old_combination, self.operating_mode, self.argument]
-
-            write_hotkeys_json(list_of_hotkeys)
-
-    def redraw_interface(self):
-        if self.mode.currentText() == "Simulate pressing button":
-            self.path_or_txt.hide()
-            self.open_button.hide()
-
-            with open(JS_KEYS_TO_SIMULATE, "r") as file_keys:
-                keys = json.load(file_keys)
-
-            self.button_to_simulate = QtWidgets.QComboBox()
-            self.button_to_simulate.setObjectName("button_to_simulate")
-
-            for i, key in enumerate(keys):
-                self.button_to_simulate.addItem("")
-                self.button_to_simulate.setItemText(i, QtCore.QCoreApplication.translate("Dialog", key))
-
-            self.horizontalLayout.addWidget(self.button_to_simulate)
-
-        else:
-            try:
-                self.button_to_simulate.hide()
-            except:
-                pass
-
-            self.path_or_txt.show()
-            self.open_button.show()
-
-        if self.mode.currentText() == "Type from entered text" or self.mode.currentText() == "Open URL":
-            self.open_button.setEnabled(False)
-        else:
-            self.open_button.setEnabled(True)
-
-    def load_theme(self):
-        if dict_of_settings['theme'] == "bright":
-            with open(CSS_ADD_WINDOW_BRIGHT) as file:
-                self.setStyleSheet(eval(file.read()))
-        else:
-            with open(CSS_ADD_WINDOW_DARK) as file:
-                self.setStyleSheet(eval(file.read()))
-
-
-class SettingsWindow(QDialog, Ui_settings_window):
-
-    template = "QFrame{background-color: rgb"
-
-    def __init__(self):
-        super(SettingsWindow, self).__init__()
-        self.setupUi(self)
-
-        self.load_graphic_display_settings(False)
-
-        self.btn_choose_bg_colour_bright.clicked.connect(self.get_bg_colour_bright)
-        self.btn_choose_font_colour_bright.clicked.connect(self.get_font_colour_bright)
-
-        self.btn_choose_bg_colour_dark.clicked.connect(self.get_bg_colour_dark)
-        self.btn_choose_font_colour_dark.clicked.connect(self.get_font_colour_dark)
-
-        self.font_type.setCurrentFont(QFont(dict_of_settings['font']))
-        self.font_size.setValue(dict_of_settings['font_size'])
-
-        self.buttonBox.button(QDialogButtonBox.Reset).clicked.connect(self.on_reset)
-
-# --------Show choosed colours--------------------
-    def get_bg_colour_bright(self):
-        dict_of_settings['bg_colour_bright'] = get_colour()
-        self.showed_bg_colour_bright.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
-
-    def get_font_colour_bright(self):
-        dict_of_settings['font_colour_bright'] = get_colour()
-        self.showed_font_colour_bright.setStyleSheet(self.template + dict_of_settings['font_colour_bright'] + "}")
-
-    def get_bg_colour_dark(self):
-        dict_of_settings['bg_colour_bright'] = get_colour()
-        self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
-
-    def get_font_colour_dark(self):
-        dict_of_settings['font_colour_bright'] = get_colour()
-        self.showed_font_colour_dark.setStyleSheet(self.template + dict_of_settings['font_colour_dark'] + "}")
-# ------------------------------------------------
-
-    def load_graphic_display_settings(self, is_reset: bool):
-        self.showed_bg_colour_bright.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
-        self.showed_font_colour_bright.setStyleSheet(self.template + dict_of_settings['font_colour_bright'] + "}")
-        self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_dark'] + "}")
-        self.showed_font_colour_dark.setStyleSheet(self.template + dict_of_settings['font_colour_dark'] + "}")
-
-        if not is_reset:
-            if dict_of_settings['theme'] == "bright":
-                self.bright_theme_btn.setChecked(True)
-
-                with open(CSS_SETTINGS_BRIGHT) as file:
-                    self.setStyleSheet(eval(file.read()))
-            elif dict_of_settings['theme'] == "dark":
-                self.dark_theme_btn.setChecked(True)
-
-                with open(CSS_SETTINGS_DARK) as file:
-                    self.setStyleSheet(eval(file.read()))
-
-    def on_accepted(self):
-        dict_of_settings['font'] = self.font_type.currentFont().family()
-        dict_of_settings['font_size'] = self.font_size.value()
-
-        if self.bright_theme_btn.isChecked():
-            dict_of_settings['theme'] = "bright"
-        elif self.dark_theme_btn.isChecked():
-            dict_of_settings['theme'] = "dark"
-        write_settings_json()
-
-    def on_reset(self):
-        for name, value in DEFAULT_SETTINGS.items():
-            dict_of_settings[name] = value
-
-        self.load_graphic_display_settings(True)
+dict_of_settings = read_settings_json()
 
 
 class MainInterface(QMainWindow, Ui_MainWindow):
@@ -269,6 +74,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             self.setting_bright()
         elif dict_of_settings['theme'] == "dark":
             self.setting_dark()
+        # TODO: Write one more else
 
     def setting_bright(self):
         with open(CSS_MAIN_BRIGHT) as file:
@@ -369,7 +175,6 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                 list_of_hotkeys = json.load(file)
 
             if list_of_hotkeys[row][0]:
-                temp = list_of_hotkeys[row]
                 keyboard.remove_hotkey(list_of_hotkeys[row][2])
 
             state = self.tableWidget.item(row, column).checkState()
@@ -450,6 +255,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 # ------------------------------------------------
 
     def closeEvent(self, event):
+        # local dict
         if dict_of_settings['show_message_on_exit']:
             checkbox = QCheckBox(parent=self, text="Don`t ask me again")
 
@@ -465,7 +271,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
             if checkbox.isChecked():
                 dict_of_settings['show_message_on_exit'] = False
-                write_settings_json()
+                write_settings_json(dict_of_settings)
 
             if close == QMessageBox.Yes:
                 self.is_closing = True
@@ -481,32 +287,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             self.hide()
 
 
-# Open "Colour Chooser"`s window
-def get_colour():
-    colour = QColorDialog.getColor().getRgb()
-    colour = colour[:-1]
-
-    return str(colour)
-
-
-def read_settings_json():
-    global dict_of_settings
-    with open(JS_SETTINGS) as file:
-        dict_of_settings = json.load(file)
-
-
-def write_settings_json():
-    with open(JS_SETTINGS, 'w') as file:
-        json.dump(dict_of_settings, file, indent=2)
-
-
-def write_hotkeys_json(list_of_hotkeys):
-    with open(JS_HOTKEYS, 'w') as file:
-        json.dump(list_of_hotkeys, file, indent=2)
-
-
 async def main():
-    read_settings_json()
 
     app = QtWidgets.QApplication(sys.argv)
 
