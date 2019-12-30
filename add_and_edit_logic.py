@@ -6,9 +6,8 @@ from add_window import Ui_Dialog
 from global_definitions import read_settings_json
 from global_definitions import write_hotkeys_json
 
-from constants import JS_HOTKEYS
+from constants import JS_HOTKEYS, JS_KEYS_TO_SIMULATE, JS_MODES
 from constants import TRANSLATE_TABLE_RUS_ENG
-from constants import JS_KEYS_TO_SIMULATE
 from constants import CSS_ADD_WINDOW_BRIGHT, CSS_ADD_WINDOW_DARK
 
 import json
@@ -22,6 +21,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
         super(AddAndEditWindow, self).__init__()
         self.setupUi(self)
 
+        self.draw_modes()
         self.load_theme()
 
         self.is_edit = kwargs['is_edit']
@@ -136,3 +136,11 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
         else:
             with open(CSS_ADD_WINDOW_DARK) as file:
                 self.setStyleSheet(eval(file.read()))
+
+    def draw_modes(self):
+        with open(JS_MODES, 'r') as modes_file:
+            modes = json.load(modes_file)
+
+        for i, mode in enumerate(modes):
+            self.mode.addItem("")
+            self.mode.setItemText(i, QtCore.QCoreApplication.translate("Dialog", mode))
