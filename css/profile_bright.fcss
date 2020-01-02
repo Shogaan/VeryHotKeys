@@ -1,0 +1,20 @@
+"""
+        QDialog {
+            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+        }
+
+        QLabel, QListWidget {
+            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+
+        QListWidget {
+            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+        }
+
+        QLineEdit {
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+"""

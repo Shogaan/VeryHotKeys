@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'uis\interface.ui'
+# Form implementation generated from reading ui file '.\uis\interface.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -106,6 +106,8 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
+        self.profiles_menu = QtWidgets.QMenu(self.menubar)
+        self.profiles_menu.setObjectName("profiles_menu")
         MainWindow.setMenuBar(self.menubar)
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
@@ -120,11 +122,16 @@ class Ui_MainWindow(object):
         self.actionSettings.setObjectName("actionSettings")
         self.actionSettings_ = QtWidgets.QAction(MainWindow)
         self.actionSettings_.setObjectName("actionSettings_")
+        self.profile_managment = QtWidgets.QAction(MainWindow)
+        self.profile_managment.setObjectName("profile_managment")
         self.menuFile.addAction(self.actionTo_tray)
         self.menuFile.addAction(self.actionSettings_)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
+        self.profiles_menu.addAction(self.profile_managment)
+        self.profiles_menu.addSeparator()
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.profiles_menu.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -144,6 +151,7 @@ class Ui_MainWindow(object):
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Argument"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
+        self.profiles_menu.setTitle(_translate("MainWindow", "Profiles"))
         self.actionSave.setText(_translate("MainWindow", "Save"))
         self.actionTo_tray.setText(_translate("MainWindow", "To tray"))
         self.actionTo_tray.setShortcut(_translate("MainWindow", "Ctrl+Down"))
@@ -151,3 +159,4 @@ class Ui_MainWindow(object):
         self.turn_on_dark_theme.setText(_translate("MainWindow", "Dark theme"))
         self.actionSettings.setText(_translate("MainWindow", "Settings"))
         self.actionSettings_.setText(_translate("MainWindow", "Settings"))
+        self.profile_managment.setText(_translate("MainWindow", "Profile management"))
