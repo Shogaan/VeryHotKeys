@@ -37,11 +37,16 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
         self.is_closing = False
         self.current_profile = ""
+
+        self.tray_icon = QSystemTrayIcon(self)
         self.profiles_group = QActionGroup(self.menubar)
 
+        self.profiles_submenu_tray = QMenu(self)
+        self.profiles_submenu_tray_group = QActionGroup(self.tray_icon)
 
-        self.profiles_group.setExclusive(True)
+
         self.profiles_group.triggered.connect(self.change_profile)
+        self.profiles_submenu_tray_group.triggered.connect(self.change_profile)
 
         with open(JS_HOTKEYS, 'r') as file_hotkeys:
             dict_of_hotkeys = json.load(file_hotkeys)
@@ -55,6 +60,11 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
                 self.profiles_group.addAction(profile)
                 self.profiles_menu.addAction(profile)
+
+                # ----- Add profile in submenu for tray -----
+                self.profiles_submenu_tray_group.addAction(profile)
+                self.profiles_submenu_tray.addAction(profile)
+                # -------------------------------------------
             del dict_of_hotkeys
 
         self.load_hotkeys()
@@ -74,23 +84,27 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         self.actionExit.triggered.connect(self.close)
 
         # --------------Set tray icon---------------------
-        self.tray_icon = QSystemTrayIcon(self)
         self.tray_icon.setIcon(QIcon("images/logo2.ico"))
 
         show_action = QAction("Show", self)
+        profiles_action = QAction("Profiles", self)
         quit_action = QAction("Exit", self)
 
+        profiles_action.setMenu(self.profiles_submenu_tray)
+
         show_action.triggered.connect(self.show_main_window)
+
         quit_action.triggered.connect(qApp.quit)
 
         tray_menu = QMenu()
         tray_menu.addAction(show_action)
+        tray_menu.addAction(profiles_action)
         tray_menu.addAction(quit_action)
 
         self.tray_icon.setContextMenu(tray_menu)
-        self.tray_icon.activated.connect(self.show_main_window)
+        self.tray_icon.activated.connect(self.if_show_main_window_on_tray_click)
         self.tray_icon.show()
-    # ------------------------------------------------
+        # ------------------------------------------------
 
     # -----------------Initialization CSS-------------
     def load_settings(self):
@@ -185,6 +199,10 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             profile_window.on_rejected()
 
             self.redraw_profile_menu()
+
+    def if_show_main_window_on_tray_click(self, reason):
+        if reason == 3:
+            self.show_main_window()
 
     def show_main_window(self):
         self.show()
