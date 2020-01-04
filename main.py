@@ -88,6 +88,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         tray_menu.addAction(quit_action)
 
         self.tray_icon.setContextMenu(tray_menu)
+        self.tray_icon.activated.connect(self.show_main_window)
         self.tray_icon.show()
     # ------------------------------------------------
 
