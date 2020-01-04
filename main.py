@@ -135,7 +135,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
     # ---------Open different windows-----------------
     def open_add_window(self):
-        add_window = AddAndEditWindow(is_edit=False, profile=self.profiles_group.checkedAction().text())
+        add_window = AddAndEditWindow(is_edit=False, profile=self.current_profile)
         add_window.setModal(True)
         dialog_window = add_window.exec_()
 
@@ -168,8 +168,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         index = selected_row[0].row() if selected_row != [] else -1
 
         if index != -1:
-            edit_window = AddAndEditWindow(is_edit=True, index_of_hotkey_for_edit=index,
-                                           profile=self.profiles_group.checkedAction().text())
+            edit_window = AddAndEditWindow(is_edit=True, index_of_hotkey_for_edit=index, profile=self.current_profile)
             edit_window.setModal(True)
             dialog_window = edit_window.exec_()
 
