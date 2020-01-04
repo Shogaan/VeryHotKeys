@@ -6,13 +6,10 @@ from keyboard import unhook_all_hotkeys
 from profile import Ui_Dialog
 
 from global_definitions import read_settings_json, write_settings_json
-from global_definitions import write_hotkeys_json
+from global_definitions import read_hotkeys_json, write_hotkeys_json
 
-from constants import JS_HOTKEYS
 from constants import CSS_PROFILE_BRIDHT, CSS_PROFILE_DARK
 from constants import TEMPLATE_FOR_CREATION_PROFILE
-
-import json
 
 dict_of_settings = read_settings_json()
 
@@ -52,8 +49,7 @@ class ProfileWindow(QDialog, Ui_Dialog):
         if self.name_profile.text() != self.old_profile_name and self.name_profile != "":
             self.new_profile_name = self.name_profile.text()
 
-            with open(JS_HOTKEYS, 'r') as hotkeys_file:
-                dict_of_hotkeys = json.load(hotkeys_file)
+            dict_of_hotkeys = read_hotkeys_json()
 
             if self.new_profile_name not in dict_of_hotkeys:
                 self.profiles_list.currentItem().setText(self.new_profile_name)
@@ -66,8 +62,7 @@ class ProfileWindow(QDialog, Ui_Dialog):
                 self.name_profile.setText(self.old_profile_name)
 
     def add_new_profile(self):
-        with open(JS_HOTKEYS, 'r') as file:
-            dict_of_hotkeys = json.load(file)
+        dict_of_hotkeys = read_hotkeys_json()
 
         if self.is_first:
             self.old_profiles = {**self.old_profiles, **dict_of_hotkeys}
@@ -95,8 +90,7 @@ class ProfileWindow(QDialog, Ui_Dialog):
 
             self.name_profile.setText("")
 
-            with open(JS_HOTKEYS, 'r') as file:
-                dict_of_hotkeys = json.load(file)
+            dict_of_hotkeys = read_hotkeys_json()
 
             if self.is_first:
                 self.old_profiles = {**self.old_profiles, **dict_of_hotkeys}
@@ -135,8 +129,7 @@ class ProfileWindow(QDialog, Ui_Dialog):
 
 # ----- Some "system" methods ---
     def load_profiles(self):
-        with open(JS_HOTKEYS, 'r') as file:
-            dict_of_profiles = json.load(file)
+        dict_of_profiles = read_hotkeys_json()
 
         for profile_name in dict_of_profiles:
             self.profiles_list.addItem(QListWidgetItem(profile_name))
@@ -155,8 +148,7 @@ class ProfileWindow(QDialog, Ui_Dialog):
                 a += 1
 
     def on_accepted(self):
-        with open(JS_HOTKEYS, 'r') as file:
-            dict_of_hotkeys = json.load(file)
+        dict_of_hotkeys = read_hotkeys_json()
 
         if self.was_enabled is not None and (self.was_enabled or self.none_is_enable_after_addition):
             try:

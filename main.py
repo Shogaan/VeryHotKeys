@@ -15,15 +15,13 @@ from profile_logic import ProfileWindow
 from modes_create_logic import treat_information_for_creating
 
 from global_definitions import read_settings_json, write_settings_json
-from global_definitions import write_hotkeys_json
+from global_definitions import read_hotkeys_json, write_hotkeys_json
 
-from constants import JS_HOTKEYS
 from constants import CSS_MAIN_BRIGHT, CSS_MAIN_DARK
 
 import keyboard
 import webbrowser
 import asyncio
-import json
 import os
 import sys
 
@@ -44,28 +42,26 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         self.profiles_submenu_tray = QMenu(self)
         self.profiles_submenu_tray_group = QActionGroup(self.tray_icon)
 
-
         self.profiles_group.triggered.connect(self.change_profile)
         self.profiles_submenu_tray_group.triggered.connect(self.change_profile)
 
-        with open(JS_HOTKEYS, 'r') as file_hotkeys:
-            dict_of_hotkeys = json.load(file_hotkeys)
-            for profile_name in dict_of_hotkeys:
-                profile = QAction(text=profile_name)
-                profile.setCheckable(True)
-                if dict_of_hotkeys[profile_name]['enable']:
-                    self.current_profile = profile_name
-                    profile.setChecked(True)
+        dict_of_hotkeys = read_hotkeys_json()
+        for profile_name in dict_of_hotkeys:
+            profile = QAction(text=profile_name)
+            profile.setCheckable(True)
+            if dict_of_hotkeys[profile_name]['enable']:
+                self.current_profile = profile_name
+                profile.setChecked(True)
 
 
-                self.profiles_group.addAction(profile)
-                self.profiles_menu.addAction(profile)
+            self.profiles_group.addAction(profile)
+            self.profiles_menu.addAction(profile)
 
-                # ----- Add profile in submenu for tray -----
-                self.profiles_submenu_tray_group.addAction(profile)
-                self.profiles_submenu_tray.addAction(profile)
-                # -------------------------------------------
-            del dict_of_hotkeys
+            # ----- Add profile in submenu for tray -----
+            self.profiles_submenu_tray_group.addAction(profile)
+            self.profiles_submenu_tray.addAction(profile)
+            # -------------------------------------------
+        del dict_of_hotkeys
 
         self.load_hotkeys()
         self.load_settings()
@@ -139,8 +135,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         add_window.setModal(True)
         dialog_window = add_window.exec_()
 
-        with open(JS_HOTKEYS) as file:
-            dict_of_profiles = json.load(file)
+        dict_of_profiles = read_hotkeys_json()
 
         if dialog_window == QDialog.Accepted:
             if dict_of_profiles[self.current_profile]['hotkeys'][-1][2] != "":
@@ -172,8 +167,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             edit_window.setModal(True)
             dialog_window = edit_window.exec_()
 
-            with open(JS_HOTKEYS) as file:
-                dict_of_profiles = json.load(file)
+            dict_of_profiles = read_hotkeys_json()
 
             if dialog_window == QDialog.Accepted:
                 if dict_of_profiles[self.current_profile]['hotkeys'][index][2] != "":
@@ -212,8 +206,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
     def add_hotkey_to_table(self):
         self.tableWidget.insertRow(self.tableWidget.rowCount())
 
-        with open(JS_HOTKEYS) as file_hotkeys:
-            list_of_hotkeys = json.load(file_hotkeys)[self.current_profile]['hotkeys']
+        list_of_hotkeys = read_hotkeys_json()[self.current_profile]['hotkeys']
 
         for index, e in enumerate(list_of_hotkeys):
             for column, item in enumerate(e):
@@ -230,9 +223,8 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
     def on_cell_changed(self, row, column):
         if column in (0, 1):
-            with open(JS_HOTKEYS) as file:
-                dict_of_profiles = json.load(file)
-                list_of_hotkeys = dict_of_profiles[self.profile]['hotkeys']
+            dict_of_profiles = read_hotkeys_json()
+            list_of_hotkeys = dict_of_profiles[self.profile]['hotkeys']
 
             if list_of_hotkeys[row][0]:
                 keyboard.remove_hotkey(list_of_hotkeys[row][2])
@@ -276,50 +268,48 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         self.profiles_menu.addAction(self.profile_managment)
         self.profiles_menu.addSeparator()
 
-        with open(JS_HOTKEYS, 'r') as file_hotkeys:
-            dict_of_hotkeys = json.load(file_hotkeys)
-            for profile_name in dict_of_hotkeys:
-                profile = QAction(text=profile_name)
-                profile.setCheckable(True)
-                if dict_of_hotkeys[profile_name]['enable']:
-                    self.current_profile = profile_name
-                    profile.setChecked(True)
+        dict_of_hotkeys = read_hotkeys_json()
+        for profile_name in dict_of_hotkeys:
+            profile = QAction(text=profile_name)
+            profile.setCheckable(True)
+            if dict_of_hotkeys[profile_name]['enable']:
+                self.current_profile = profile_name
+                profile.setChecked(True)
 
-                self.profiles_group.addAction(profile)
-                self.profiles_menu.addAction(profile)
+            self.profiles_group.addAction(profile)
+            self.profiles_menu.addAction(profile)
 
     def load_hotkeys(self):
-        with open(JS_HOTKEYS) as file_hotkeys:
-            list_of_hotkeys = json.load(file_hotkeys)[self.current_profile]['hotkeys']
+        list_of_hotkeys = read_hotkeys_json()[self.current_profile]['hotkeys']
 
-            for i in range(len(list_of_hotkeys)):
-                self.tableWidget.insertRow(self.tableWidget.rowCount())
+        for i in range(len(list_of_hotkeys)):
+            self.tableWidget.insertRow(self.tableWidget.rowCount())
 
-            for i_r, e in enumerate(list_of_hotkeys):
-                for i_e, item in enumerate(e):
+        for i_r, e in enumerate(list_of_hotkeys):
+            for i_e, item in enumerate(e):
 
-                    item_in_table = QtWidgets.QTableWidgetItem(item)
+                item_in_table = QtWidgets.QTableWidgetItem(item)
 
-                    if i_e == 0 or i_e == 1:
-                        item_in_table.setCheckState(Qt.Checked if item else Qt.Unchecked)
-                        self.tableWidget.setItem(i_r, i_e, item_in_table)
-                    elif i_e == 3:
-                        mode = i_e
-                        self.tableWidget.setItem(i_r, i_e, item_in_table)
-                    else:
-                        if i_e == 4 and mode in ("Open file", "Open directory", "Type from file"):
-                            path = Path(item)
+                if i_e == 0 or i_e == 1:
+                    item_in_table.setCheckState(Qt.Checked if item else Qt.Unchecked)
+                    self.tableWidget.setItem(i_r, i_e, item_in_table)
+                elif i_e == 3:
+                    mode = i_e
+                    self.tableWidget.setItem(i_r, i_e, item_in_table)
+                else:
+                    if i_e == 4 and mode in ("Open file", "Open directory", "Type from file"):
+                        path = Path(item)
 
-                            if path.exists():
-                                self.tableWidget.setItem(i_r, i_e, item_in_table)
-                            else:
-                                self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
-
-                        else:
+                        if path.exists():
                             self.tableWidget.setItem(i_r, i_e, item_in_table)
+                        else:
+                            self.tableWidget.setItem(i_r, i_e, QtWidgets.QTableWidgetItem("File doesn't exist"))
 
-                self.tableWidget.resizeColumnsToContents()
-                self.create_hotkeys(e)
+                    else:
+                        self.tableWidget.setItem(i_r, i_e, item_in_table)
+
+            self.tableWidget.resizeColumnsToContents()
+            self.create_hotkeys(e)
 
     @staticmethod
     def create_hotkeys(element):
@@ -338,17 +328,17 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         if index != -1:
             self.tableWidget.removeRow(index)
 
-            with open(JS_HOTKEYS) as file_hotkeys:
-                dict_of_profiles = json.load(file_hotkeys)
-                list_of_hotkeys = dict_of_profiles[self.current_profile]['hotkeys']
-                try:
-                    keyboard.remove_hotkey(list_of_hotkeys[index][2])
-                except: pass
-                list_of_hotkeys.pop(index)
+            dict_of_profiles = read_hotkeys_json()
+            list_of_hotkeys = dict_of_profiles[self.current_profile]['hotkeys']
+            try:
+                keyboard.remove_hotkey(list_of_hotkeys[index][2])
+            except AttributeError:
+                pass
+            list_of_hotkeys.pop(index)
 
-                dict_of_profiles[self.current_profile]['hotkeys'] = list_of_hotkeys
+            dict_of_profiles[self.current_profile]['hotkeys'] = list_of_hotkeys
 
-                write_hotkeys_json(dict_of_profiles)
+            write_hotkeys_json(dict_of_profiles)
 # ------------------------------------------------
 
     def closeEvent(self, event):

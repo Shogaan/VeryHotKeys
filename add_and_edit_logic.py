@@ -4,9 +4,9 @@ from PyQt5.QtWidgets import QDialog, QFileDialog
 from add_window import Ui_Dialog
 
 from global_definitions import read_settings_json
-from global_definitions import write_hotkeys_json
+from global_definitions import read_hotkeys_json, write_hotkeys_json
 
-from constants import JS_HOTKEYS, JS_KEYS_TO_SIMULATE, JS_MODES
+from constants import JS_KEYS_TO_SIMULATE, JS_MODES
 from constants import TRANSLATE_TABLE_RUS_ENG
 from constants import CSS_ADD_WINDOW_BRIGHT, CSS_ADD_WINDOW_DARK
 
@@ -29,15 +29,14 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
         self.profile = kwargs['profile']
 
         if self.is_edit:
-            with open(JS_HOTKEYS) as file_hotkeys:
-                self.old_is_enable,\
-                self.old_has_suppress,\
-                self.old_combination,\
-                self.operating_mode,\
-                self.argument = json.load(file_hotkeys)[self.profile]['hotkey'][self.index_of_hotkey_for_edit]
+            self.old_is_enable, \
+            self.old_has_suppress, \
+            self.old_combination, \
+            self.operating_mode, \
+            self.argument = read_hotkeys_json()[self.profile]['hotkey'][self.index_of_hotkey_for_edit]
 
-                self.is_enable_check.setChecked(self.old_is_enable)
-                self.suppress_check.setChecked(self.old_has_suppress)
+            self.is_enable_check.setChecked(self.old_is_enable)
+            self.suppress_check.setChecked(self.old_has_suppress)
 
             self.mode.setCurrentText(self.operating_mode)
             self.redraw_interface()
@@ -54,7 +53,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
         try:
             cb = keyboard.read_hotkey(suppress=False)
             self.combination.setText(cb.translate(TRANSLATE_TABLE_RUS_ENG))
-        except:
+        except AttributeError:
             pass
 
     def get_file_or_dir(self):
@@ -74,39 +73,36 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
         has_suppress = self.suppress_check.isChecked()
         mode = self.mode.currentText()
         combination = self.combination.text()
-        argument = self.button_to_simulate.currentText() if mode == "Simulate pressing button"\
+        argument = self.button_to_simulate.currentText() if mode == "Simulate pressing button" \
                                                                                             else self.path_or_txt.text()
 
         if self.is_edit:
-            with open(JS_HOTKEYS) as file_hotkeys:
-                dict_of_profiles = json.load(file_hotkeys)
-                list_of_hotkeys = dict_of_profiles[self.profile]['hotkeys']
-                list_of_hotkeys[self.index_of_hotkey_for_edit] = [is_enable, has_suppress, combination, mode, argument]
-
-                dict_of_profiles[self.profile]['hotkeys'] = list_of_hotkeys
-
-                write_hotkeys_json(dict_of_profiles)
-
-        else:
-            with open(JS_HOTKEYS) as file_hotkeys:
-                dict_of_profiles = json.load(file_hotkeys)
-                list_of_hotkeys = dict_of_profiles[self.profile]['hotkeys']
-                list_of_hotkeys.append([is_enable, has_suppress, combination, mode, argument])
-
-                dict_of_profiles[self.profile]['hotkeys'] = list_of_hotkeys
-
-                write_hotkeys_json(dict_of_profiles)
-
-    def on_reject(self, index):
-        with open(JS_HOTKEYS) as file:
-            dict_of_profiles = json.load(file)
-            list_of_hotkeys = [self.profile]['hotkey']
-            list_of_hotkeys[index] = [self.old_is_enable, self.old_has_suppress,
-                                      self.old_combination, self.operating_mode, self.argument]
+            dict_of_profiles = read_hotkeys_json()
+            list_of_hotkeys = dict_of_profiles[self.profile]['hotkeys']
+            list_of_hotkeys[self.index_of_hotkey_for_edit] = [is_enable, has_suppress, combination, mode, argument]
 
             dict_of_profiles[self.profile]['hotkeys'] = list_of_hotkeys
 
             write_hotkeys_json(dict_of_profiles)
+
+        else:
+            dict_of_profiles = read_hotkeys_json()
+            list_of_hotkeys = dict_of_profiles[self.profile]['hotkeys']
+            list_of_hotkeys.append([is_enable, has_suppress, combination, mode, argument])
+
+            dict_of_profiles[self.profile]['hotkeys'] = list_of_hotkeys
+
+            write_hotkeys_json(dict_of_profiles)
+
+    def on_reject(self, index):
+        dict_of_profiles = read_hotkeys_json()
+        list_of_hotkeys = dict_of_profiles[self.profile]['hotkey']
+        list_of_hotkeys[index] = [self.old_is_enable, self.old_has_suppress,
+                                  self.old_combination, self.operating_mode, self.argument]
+
+        dict_of_profiles[self.profile]['hotkeys'] = list_of_hotkeys
+
+        write_hotkeys_json(dict_of_profiles)
 
     def redraw_interface(self):
         if self.mode.currentText() == "Simulate pressing button":
@@ -128,7 +124,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
         else:
             try:
                 self.button_to_simulate.hide()
-            except:
+            except AttributeError:
                 pass
 
             self.path_or_txt.show()
