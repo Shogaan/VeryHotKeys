@@ -33,7 +33,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
             self.old_has_suppress, \
             self.old_combination, \
             self.operating_mode, \
-            self.argument = read_hotkeys_json()[self.profile]['hotkey'][self.index_of_hotkey_for_edit]
+            self.argument = read_hotkeys_json()[self.profile]['hotkeys'][self.index_of_hotkey_for_edit]
 
             self.is_enable_check.setChecked(self.old_is_enable)
             self.suppress_check.setChecked(self.old_has_suppress)
