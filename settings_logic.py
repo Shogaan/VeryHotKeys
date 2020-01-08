@@ -43,11 +43,11 @@ class SettingsWindow(QDialog, Ui_settings_window):
         self.showed_font_colour_bright.setStyleSheet(self.template + dict_of_settings['font_colour_bright'] + "}")
 
     def get_bg_colour_dark(self):
-        dict_of_settings['bg_colour_bright'] = get_colour()
+        dict_of_settings['bg_colour_dark'] = get_colour()
         self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
 
     def get_font_colour_dark(self):
-        dict_of_settings['font_colour_bright'] = get_colour()
+        dict_of_settings['font_colour_dark'] = get_colour()
         self.showed_font_colour_dark.setStyleSheet(self.template + dict_of_settings['font_colour_dark'] + "}")
 # ------------------------------------------------
 
