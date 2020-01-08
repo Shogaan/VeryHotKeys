@@ -224,7 +224,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
     def on_cell_changed(self, row, column):
         if column in (0, 1):
             dict_of_profiles = read_hotkeys_json()
-            list_of_hotkeys = dict_of_profiles[self.profile]['hotkeys']
+            list_of_hotkeys = dict_of_profiles[self.current_profile]['hotkeys']
 
             if list_of_hotkeys[row][0]:
                 keyboard.remove_hotkey(list_of_hotkeys[row][2])
@@ -232,7 +232,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             state = self.tableWidget.item(row, column).checkState()
             list_of_hotkeys[row][column] = True if state == 2 else False
 
-            dict_of_profiles[self.profile]['hotkeys'] = list_of_hotkeys
+            dict_of_profiles[self.current_profile]['hotkeys'] = list_of_hotkeys
 
             write_hotkeys_json(dict_of_profiles)
             self.create_hotkeys(list_of_hotkeys[row])
