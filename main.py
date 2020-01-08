@@ -361,11 +361,13 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
             if close == QMessageBox.Yes:
                 self.is_closing = True
+                self.tray_icon.hide()
                 event.accept()
             else:
                 event.ignore()
         else:
             self.is_closing = True
+            self.tray_icon.hide()
 
     def hideEvent(self, event):
         if not self.is_closing:
