@@ -53,7 +53,6 @@ class MainInterface(QMainWindow, Ui_MainWindow):
                 self.current_profile = profile_name
                 profile.setChecked(True)
 
-
             self.profiles_group.addAction(profile)
             self.profiles_menu.addAction(profile)
 
@@ -249,7 +248,12 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
     # --------Some "system" methods-------------------
     def change_profile(self, choosed_profile):
+        dict_of_profiles = read_hotkeys_json()
+        dict_of_profiles[self.current_profile]['enable'] = False
+
         self.current_profile = choosed_profile.text()
+
+        dict_of_profiles[self.current_profile]['enable'] = True
 
         try:
             keyboard.unhook_all_hotkeys()
@@ -261,6 +265,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         for row in range(self.tableWidget.rowCount()):
             self.tableWidget.removeRow(row)
 
+        write_hotkeys_json(dict_of_profiles)
         self.load_hotkeys()
 
     def redraw_profile_menu(self):
