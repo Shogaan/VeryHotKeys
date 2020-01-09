@@ -96,7 +96,7 @@ class AddAndEditWindow(QDialog, Ui_Dialog):
 
     def on_reject(self, index):
         dict_of_profiles = read_hotkeys_json()
-        list_of_hotkeys = dict_of_profiles[self.profile]['hotkey']
+        list_of_hotkeys = dict_of_profiles[self.profile]['hotkeys']
         list_of_hotkeys[index] = [self.old_is_enable, self.old_has_suppress,
                                   self.old_combination, self.operating_mode, self.argument]
 
