@@ -26,17 +26,13 @@ DEFAULT_SETTINGS = {"bg_colour_bright": "(255, 255, 255)",
                     "menu_bar_selected_bg_colour_bright": "(65, 65, 65)",
                     "menu_bar_hover_bg_colour_bright": "(98, 98, 98)",
                     "menu_bar_selected_bg_colour_dark": "(225, 225, 225)",
-                    "menu_bar_hover_bg_colour_dark": "(175,175,175)",
+                    "menu_bar_hover_bg_colour_dark": "(175, 175, 175)",
                     "menu_bar_action_hover_colour_bright": "(219, 219, 219)",
                     "menu_bar_action_hover_colour_dark": "(65, 65, 65)",
                     "select_colour_bright": "(113, 113, 113)",
                     "select_colour_dark": "(214, 214, 214)",
                     "select_font_colour_bright": "(255, 255, 255)",
                     "select_font_colour_dark": "(43, 43, 43)",
-                    "btn_hover_colour_bright": "(205,205,205)",
-                    "btn_hover_colour_dark": "(65, 65, 65)",
-                    "menu_bar_selected_hover_font_colour_bright": "(255, 255, 255)",
-                    "menu_bar_selected_hover_font_colour_dark": "(43, 43, 43)",
                     }
 
 RUS_SYMBOLS = u"ёЁйцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ"

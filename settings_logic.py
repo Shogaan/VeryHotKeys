@@ -22,11 +22,28 @@ class SettingsWindow(QDialog, Ui_settings_window):
 
         self.load_graphic_display_settings(False)
 
+        self.tab_widget.setCurrentIndex(0)
+
         self.btn_choose_bg_colour_bright.clicked.connect(self.get_bg_colour_bright)
         self.btn_choose_font_colour_bright.clicked.connect(self.get_font_colour_bright)
+        self.btn_choose_header_border_colour_bright.clicked.connect(self.get_header_border_colour_bright)
+        self.btn_choose_hover_colour_bright.clicked.connect(self.get_hover_colour_bright)
+        self.btn_choose_menu_bar_selected_bg_colour_bright.clicked.connect(self.get_menu_bar_selected_bg_colour_bright)
+        self.btn_choose_menu_bar_hover_bg_colour_bright.clicked.connect(self.get_menu_bar_hover_bg_colour_bright)
+        self.btn_choose_menu_bar_action_hover_colour_bright.clicked.connect(
+            self.get_menu_bar_action_hover_colour_bright)
+        self.btn_choose_select_colour_bright.clicked.connect(self.get_select_colour_bright)
+        self.btn_choose_select_font_colour_bright.clicked.connect(self.get_select_font_colour_bright)
 
         self.btn_choose_bg_colour_dark.clicked.connect(self.get_bg_colour_dark)
         self.btn_choose_font_colour_dark.clicked.connect(self.get_font_colour_dark)
+        self.btn_choose_header_border_colour_dark.clicked.connect(self.get_header_border_colour_dark)
+        self.btn_choose_hover_colour_dark.clicked.connect(self.get_hover_colour_dark)
+        self.btn_choose_menu_bar_selected_bg_colour_dark.clicked.connect(self.get_menu_bar_selected_bg_colour_dark)
+        self.btn_choose_menu_bar_hover_bg_colour_dark.clicked.connect(self.get_menu_bar_hover_bg_colour_dark)
+        self.btn_choose_menu_bar_action_hover_colour_dark.clicked.connect(self.get_menu_bar_action_hover_colour_dark)
+        self.btn_choose_select_colour_dark.clicked.connect(self.get_select_colour_dark)
+        self.btn_choose_select_font_colour_dark.clicked.connect(self.get_select_font_colour_dark)
 
         self.font_type.setCurrentFont(QFont(dict_of_settings['font']))
         self.font_size.setValue(dict_of_settings['font_size'])
@@ -42,6 +59,39 @@ class SettingsWindow(QDialog, Ui_settings_window):
         dict_of_settings['font_colour_bright'] = get_colour()
         self.showed_font_colour_bright.setStyleSheet(self.template + dict_of_settings['font_colour_bright'] + "}")
 
+    def get_header_border_colour_bright(self):
+        dict_of_settings['header_border_colour_bright'] = get_colour()
+        self.showed_header_border_colour_bright.setStyleSheet(self.template +
+                                                              dict_of_settings['header_border_colour_bright'] + "}")
+
+    def get_hover_colour_bright(self):
+        dict_of_settings['hover_colour_bright'] = get_colour()
+        self.showed_hover_colour_bright.setStyleSheet(self.template + dict_of_settings['hover_colour_bright'] + "}")
+
+    def get_menu_bar_selected_bg_colour_bright(self):
+        dict_of_settings['menu_bar_selected_bg_colour_bright'] = get_colour()
+        self.showed_menu_bar_selected_bg_colour_bright.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_selected_bg_colour_bright'] + "}")
+
+    def get_menu_bar_hover_bg_colour_bright(self):
+        dict_of_settings['menu_bar_hover_bg_colour_bright'] = get_colour()
+        self.showed_menu_bar_hover_bg_colour_bright.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_hover_bg_colour_bright'] + "}")
+
+    def get_menu_bar_action_hover_colour_bright(self):
+        dict_of_settings['menu_bar_action_hover_colour_bright'] = get_colour()
+        self.showed_menu_bar_action_hover_colour_bright.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_action_hover_colour_bright'] + "}")
+
+    def get_select_colour_bright(self):
+        dict_of_settings['select_colour_bright'] = get_colour()
+        self.showed_select_colour_bright.setStyleSheet(self.template + dict_of_settings['select_colour_bright'] + "}")
+
+    def get_select_font_colour_bright(self):
+        dict_of_settings['select_font_colour_bright'] = get_colour()
+        self.showed_select_font_colour_bright.setStyleSheet(self.template +
+                                                            dict_of_settings['select_font_colour_bright'] + "}")
+
     def get_bg_colour_dark(self):
         dict_of_settings['bg_colour_dark'] = get_colour()
         self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_dark'] + "}")
@@ -49,13 +99,71 @@ class SettingsWindow(QDialog, Ui_settings_window):
     def get_font_colour_dark(self):
         dict_of_settings['font_colour_dark'] = get_colour()
         self.showed_font_colour_dark.setStyleSheet(self.template + dict_of_settings['font_colour_dark'] + "}")
+
+    def get_header_border_colour_dark(self):
+        dict_of_settings['header_border_colour_dark'] = get_colour()
+        self.showed_header_border_colour_dark.setStyleSheet(self.template +
+                                                            dict_of_settings['header_border_colour_dark'] + "}")
+
+    def get_hover_colour_dark(self):
+        dict_of_settings['hover_colour_dark'] = get_colour()
+        self.showed_hover_colour_dark.setStyleSheet(self.template + dict_of_settings['hover_colour_dark'] + "}")
+
+    def get_menu_bar_selected_bg_colour_dark(self):
+        dict_of_settings['menu_bar_selected_bg_colour_dark'] = get_colour()
+        self.showed_menu_bar_selected_bg_colour_dark.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_selected_bg_colour_dark'] + "}")
+
+    def get_menu_bar_hover_bg_colour_dark(self):
+        dict_of_settings['menu_bar_hover_bg_colour_dark'] = get_colour()
+        self.showed_menu_bar_hover_bg_colour_dark.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_hover_bg_colour_dark'] + "}")
+
+    def get_menu_bar_action_hover_colour_dark(self):
+        dict_of_settings['menu_bar_action_hover_colour_dark'] = get_colour()
+        self.showed_menu_bar_action_hover_colour_dark.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_action_hover_colour_dark'] + "}")
+
+    def get_select_colour_dark(self):
+        dict_of_settings['select_colour_dark'] = get_colour()
+        self.showed_select_colour_dark.setStyleSheet(self.template + dict_of_settings['select_colour_dark'] + "}")
+
+    def get_select_font_colour_dark(self):
+        dict_of_settings['select_font_colour_dark'] = get_colour()
+        self.showed_select_font_colour_dark.setStyleSheet(self.template +
+                                                          dict_of_settings['select_font_colour_dark'] + "}")
 # ------------------------------------------------
 
     def load_graphic_display_settings(self, is_reset: bool):
         self.showed_bg_colour_bright.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
         self.showed_font_colour_bright.setStyleSheet(self.template + dict_of_settings['font_colour_bright'] + "}")
+        self.showed_header_border_colour_bright.setStyleSheet(self.template +
+                                                              dict_of_settings['header_border_colour_bright'] + "}")
+        self.showed_hover_colour_bright.setStyleSheet(self.template + dict_of_settings['hover_colour_bright'] + "}")
+        self.showed_menu_bar_selected_bg_colour_bright.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_selected_bg_colour_bright'] + "}")
+        self.showed_menu_bar_hover_bg_colour_bright.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_hover_bg_colour_bright'] + "}")
+        self.showed_menu_bar_action_hover_colour_bright.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_action_hover_colour_bright'] + "}")
+        self.showed_select_colour_bright.setStyleSheet(self.template + dict_of_settings['select_colour_bright'] + "}")
+        self.showed_select_font_colour_bright.setStyleSheet(self.template +
+                                                            dict_of_settings['select_font_colour_bright'] + "}")
+
         self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_dark'] + "}")
         self.showed_font_colour_dark.setStyleSheet(self.template + dict_of_settings['font_colour_dark'] + "}")
+        self.showed_header_border_colour_dark.setStyleSheet(self.template +
+                                                            dict_of_settings['header_border_colour_dark'] + "}")
+        self.showed_hover_colour_dark.setStyleSheet(self.template + dict_of_settings['hover_colour_dark'] + "}")
+        self.showed_menu_bar_selected_bg_colour_dark.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_selected_bg_colour_dark'] + "}")
+        self.showed_menu_bar_hover_bg_colour_dark.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_hover_bg_colour_dark'] + "}")
+        self.showed_menu_bar_action_hover_colour_dark.setStyleSheet(
+            self.template + dict_of_settings['menu_bar_action_hover_colour_dark'] + "}")
+        self.showed_select_colour_dark.setStyleSheet(self.template + dict_of_settings['select_colour_dark'] + "}")
+        self.showed_select_font_colour_dark.setStyleSheet(self.template +
+                                                          dict_of_settings['select_font_colour_dark'] + "}")
 
         if not is_reset:
             if dict_of_settings['theme'] == "bright":

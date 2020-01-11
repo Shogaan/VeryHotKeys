@@ -1,5 +1,5 @@
 """
-        QMainWindow {
+        QMainWindow, QHeaderView {
             background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """
         }
 
