@@ -5,6 +5,7 @@
 
         QLabel, QListWidget {
             color: rgb""" + dict_of_settings['font_colour_dark'] + """;
+
             font-family: """ + dict_of_settings['font'] + """;
             font-size: """ + str(dict_of_settings['font_size']) + """px
         }
@@ -15,6 +16,23 @@
 
         QLineEdit {
             font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
+            font-size: """ + str(dict_of_settings['font_size']) + """px;
+        }
+
+        QLineEdit:disabled {
+            background-color: #A0A0A0;
+        }
+
+        QListWidget::item:hover {
+            background-color: rgb""" + dict_of_settings['hover_colour_dark'] + """;
+        }
+
+        QListWidget::item:selected {
+            color: rgb""" + dict_of_settings['select_font_colour_dark'] + """;
+            background-color: rgb""" + dict_of_settings['select_colour_dark'] + """;
+        }
+
+        #add_profile:hover, #delete_profile:hover {
+            border: 2px solid rgb""" + dict_of_settings['hover_colour_dark'] + """;
         }
 """

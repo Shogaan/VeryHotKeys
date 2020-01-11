@@ -17,4 +17,17 @@
             font-family: """ + dict_of_settings['font'] + """;
             font-size: """ + str(dict_of_settings['font_size']) + """px
         }
+
+        QListWidget::item:hover {
+            background-color: rgb""" + dict_of_settings['hover_colour_bright'] + """;
+        }
+
+        QListWidget::item:selected {
+            color: rgb""" + dict_of_settings['select_font_colour_bright'] + """;
+            background-color: rgb""" + dict_of_settings['select_colour_bright'] + """;
+        }
+
+        #add_profile:hover, #delete_profile:hover {
+            border: 2px solid rgb""" + dict_of_settings['hover_colour_bright'] + """;
+        }
 """

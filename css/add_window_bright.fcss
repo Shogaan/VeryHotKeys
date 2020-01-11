@@ -5,8 +5,9 @@
 
         QLabel, QCheckBox {
             color: rgb""" + dict_of_settings['font_colour_bright'] + """;
+
             font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
+            font-size: """ + str(dict_of_settings['font_size']) + """px;
         }
 
         QLineEdit {

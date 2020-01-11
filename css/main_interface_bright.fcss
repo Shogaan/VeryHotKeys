@@ -13,33 +13,67 @@
             background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """
         }
 
+        #plus_button:hover, #minus_button:hover, #edit_button:hover {
+            border: 2px solid rgb""" + dict_of_settings['hover_colour_bright'] + """;
+        }
+
+        #tableWidget QHeaderView::section:horizontal {
+            color: rgb""" + dict_of_settings['font_colour_bright'] + """;
+            background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+
+            font-family: """ + dict_of_settings['font'] + """;
+            font-size: """ + str(dict_of_settings['font_size']) + """px;
+        }
+
+        #tableWidget QHeaderView::section::item {
+            border: .5px solid rgb""" + dict_of_settings['header_border_colour_bright'] +""";
+        }
+
         #tableWidget {
             color: rgb""" + dict_of_settings['font_colour_bright'] + """;
             background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+
             selection-color: rgb""" + dict_of_settings['font_colour_bright'] + """;
             selection-background-color: #D6D6D6;
+
             font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
+            font-size: """ + str(dict_of_settings['font_size']) + """px;
         }
 
         #menubar {
             color: rgb""" + dict_of_settings['font_colour_bright'] + """;
             background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+
             font-family: """ + dict_of_settings['font'] + """;
             font-size: """ + str(dict_of_settings['font_size']) + """px
+        }
+
+        #menubar::item:selected {
+            background-color: rgb""" + dict_of_settings['menu_bar_hover_bg_colour_bright'] + """;
+            color: rgb""" + dict_of_settings['select_font_colour_bright'] + """;
+        }
+
+        #menubar::item:open {
+            background-color: rgb""" + dict_of_settings['menu_bar_selected_bg_colour_bright'] + """;
         }
 
         #menuFile {
             color: rgb""" + dict_of_settings['font_colour_bright'] + """;
             background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+
             font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
+            font-size: """ + str(dict_of_settings['font_size']) + """px;
         }
 
         #profiles_menu {
             color: rgb""" + dict_of_settings['font_colour_bright'] + """;
             background-color: rgb""" + dict_of_settings['bg_colour_bright'] + """;
+
             font-family: """ + dict_of_settings['font'] + """;
-            font-size: """ + str(dict_of_settings['font_size']) + """px
+            font-size: """ + str(dict_of_settings['font_size']) + """px;
+        }
+
+        #menuFile:selected, #profiles_menu:selected {
+            background-color: rgb""" + dict_of_settings['menu_bar_action_hover_colour_bright'] + """;
         }
 """

@@ -17,6 +17,11 @@
             background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """
         }
 
+        QTabWidget::pane {
+            background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
+            border: 1px solid white;
+        }
+
         QRadioButton {
             color: rgb""" + dict_of_settings['font_colour_dark'] + """;
             font-family: """ + dict_of_settings['font'] + """;
@@ -25,7 +30,29 @@
 
         QTabBar::tab {
             font-family: """ + dict_of_settings['font'] + """;
-            font-size: 11px
+            font-size: 11px;
+
+            background-color: rgb""" + dict_of_settings['bg_colour_dark'] + """;
+            color: rgb""" + dict_of_settings['font_colour_dark'] + """;
+
+            border: .5px solid white;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+
+            padding: 4px 14px;
+        }
+
+        QTabBar::tab:!selected {
+            margin-top: 2px;
+        }
+
+        QTabBar::tab:hover {
+            background-color: rgb""" + dict_of_settings['hover_colour_dark'] + """;
+        }
+
+        QTabBar::tab:selected {
+            background-color: rgb""" + dict_of_settings['select_colour_dark'] + """;
+            color: rgb""" + dict_of_settings['select_font_colour_dark'] + """;
         }
 
         QGroupBox {
