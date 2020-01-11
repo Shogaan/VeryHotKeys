@@ -109,6 +109,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
             self.setting_dark()
         else:
             dict_of_settings['theme'] = "bright"
+            self.setting_bright()
             write_settings_json(dict_of_settings)
 
     def setting_bright(self):

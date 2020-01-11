@@ -44,7 +44,7 @@ class SettingsWindow(QDialog, Ui_settings_window):
 
     def get_bg_colour_dark(self):
         dict_of_settings['bg_colour_dark'] = get_colour()
-        self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_bright'] + "}")
+        self.showed_bg_colour_dark.setStyleSheet(self.template + dict_of_settings['bg_colour_dark'] + "}")
 
     def get_font_colour_dark(self):
         dict_of_settings['font_colour_dark'] = get_colour()
