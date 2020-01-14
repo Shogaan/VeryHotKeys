@@ -336,10 +336,10 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
             dict_of_profiles = read_hotkeys_json()
             list_of_hotkeys = dict_of_profiles[self.current_profile]['hotkeys']
-            try:
+
+            if list_of_hotkeys[index][0]:
                 keyboard.remove_hotkey(list_of_hotkeys[index][2])
-            except AttributeError:
-                pass
+
             list_of_hotkeys.pop(index)
 
             dict_of_profiles[self.current_profile]['hotkeys'] = list_of_hotkeys
