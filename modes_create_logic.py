@@ -18,6 +18,8 @@ def treat_information_for_creating(mode_name, argument):
         return False, None, None
 
     def open_url(argument):
+        if not (argument.startswith("http://") or argument.startswith("https://")):
+            argument = "http://" + argument
         return True, "webbrowser.open", argument
 
     def type_from_file(path):
