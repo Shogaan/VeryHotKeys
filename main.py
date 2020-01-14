@@ -148,12 +148,14 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
     @staticmethod
     def open_settings_window():
+        global dict_of_settings
         settings_window = SettingsWindow()
         settings_window.setModal(True)
         dialog_settings_window = settings_window.exec_()
 
         if dialog_settings_window == QDialog.Accepted:
             settings_window.on_accepted()
+            dict_of_settings = read_settings_json()
         elif dialog_settings_window == QDialog.Rejected:
             read_settings_json()
 
