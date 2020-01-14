@@ -13,9 +13,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_settings_window(object):
     def setupUi(self, settings_window):
         settings_window.setObjectName("settings_window")
-        settings_window.resize(620, 250)
+        settings_window.resize(560, 250)
         settings_window.setMinimumSize(QtCore.QSize(550, 215))
-        settings_window.setMaximumSize(QtCore.QSize(650, 455))
+        settings_window.setMaximumSize(QtCore.QSize(580, 455))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/logo2.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         settings_window.setWindowIcon(icon)
@@ -77,7 +77,7 @@ class Ui_settings_window(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 398, 291))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 229, 291))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -433,4 +433,4 @@ class Ui_settings_window(object):
         self.label_11.setText(_translate("settings_window", "Select font colour"))
         self.btn_choose_select_font_colour_dark.setText(_translate("settings_window", "Choose"))
         self.tab_widget.setTabText(self.tab_widget.indexOf(self.tab_2), _translate("settings_window", "Dark"))
-        self.label.setText(_translate("settings_window", "All changes need to rerun the app!!!"))
+        self.label.setText(_translate("settings_window", "All changes need to restart the app!!!"))
