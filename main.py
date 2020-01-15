@@ -263,9 +263,7 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         except AttributeError:
             pass
 
-        self.tableWidget.clearContents()
-
-        for row in range(self.tableWidget.rowCount()):
+        for row in range(self.tableWidget.rowCount()-1, -1, -1):
             self.tableWidget.removeRow(row)
 
         write_hotkeys_json(dict_of_profiles)
