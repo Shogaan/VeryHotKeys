@@ -28,6 +28,9 @@
         QTabBar::tab {
             font-family: """ + dict_of_settings['font'] + """;
             font-size: 11px;
+
+            width: 7em;
+            height: 1.8em;
         }
 
         QGroupBox {
