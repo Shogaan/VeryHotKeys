@@ -20,21 +20,25 @@ pip install -r requirements.txt
 ```
 To launch the app you need to have activated venv and in cmd type `python main.py`
 
-Second way is using exe-files:
-
-#### Portable version
-
-```
-https://www.mediafire.com/file/qcipqaruxg9czt4/Very_Hot_Keys%28portable%29_v1.0.1.zip/file
-```
-
-#### Installation version
-
-```
-https://www.mediafire.com/file/0mix8hpy1031bd4/very-hot-keys-setup-1-0-1.exe/file
-```
+Second way is using exe-files([click](https://github.com/Shogaan/VeryHotKeys/releases)).
 
 For more information check [wiki](https://github.com/Shogaan/VeryHotKeys/wiki/Installation-and-converting-to-exe)
+
+## New in v1.1.0
+
+### Added:
+* Profiles
+* Simulation key pressing
+* Enable/disable hotkey or its suppress by checkboxes in table
+* Better design
+* Open main window on left click on tray icon
+
+### Fixed:
+* Incorrect display info in "Argument"
+* Crashes(?) when was entered incorrect name of theme
+
+### Rewritten:
+* main.py was separated on different files
 
 ## New in v1.0.1
 
