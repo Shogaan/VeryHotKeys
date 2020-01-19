@@ -81,26 +81,34 @@ class ProfileWindow(QDialog, Ui_Dialog):
         write_hotkeys_json(dict_of_hotkeys)
 
     def delete_profile(self):
-        try:
-            deleted_item = self.profiles_list.currentItem().text()
-        except AttributeError:
-            pass
-        else:
-            _ = self.profiles_list.takeItem(self.profiles_list.row(self.profiles_list.currentItem()))
+        is_last = True if self.profiles_list.count() == 1 else False
 
-            self.name_profile.setText("")
+        deleted_items = self.profiles_list.selectedItems()
 
-            dict_of_hotkeys = read_hotkeys_json()
+        if not deleted_items:
+            return
 
-            if self.is_first:
-                self.old_profiles = {**self.old_profiles, **dict_of_hotkeys}
-                self.is_first = False
+        item = deleted_items[0]
 
-            self.was_enabled = dict_of_hotkeys[deleted_item]['enable']
+        self.profiles_list.takeItem(self.profiles_list.row(item))
 
-            dict_of_hotkeys.pop(deleted_item)
+        self.name_profile.setText("")
+        self.profiles_list.setCurrentRow(-1)
 
-            write_hotkeys_json(dict_of_hotkeys)
+        dict_of_hotkeys = read_hotkeys_json()
+
+        if self.is_first:
+            self.old_profiles = {**self.old_profiles, **dict_of_hotkeys}
+            self.is_first = False
+
+        self.was_enabled = dict_of_hotkeys[item.text()]['enable']
+
+        dict_of_hotkeys.pop(item.text())
+
+        write_hotkeys_json(dict_of_hotkeys)
+
+        if is_last:
+            self.add_new_profile()
 
 # ------ Initialization CSS -----
     def load_settings(self):
