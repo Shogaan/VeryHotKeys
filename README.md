@@ -24,6 +24,11 @@ Second way is using exe-files([click](https://github.com/Shogaan/VeryHotKeys/rel
 
 For more information check [wiki](https://github.com/Shogaan/VeryHotKeys/wiki/Installation-and-converting-to-exe)
 
+## New in v1.1.1
+
+### Fixed:
+* Ability to delete last profile
+
 ## New in v1.1.0
 
 ### Added:
