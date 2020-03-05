@@ -274,6 +274,8 @@ class MainInterface(QMainWindow, Ui_MainWindow):
         self.profiles_menu.addAction(self.profile_managment)
         self.profiles_menu.addSeparator()
 
+        self.profiles_submenu_tray.clear()
+
         dict_of_hotkeys = read_hotkeys_json()
         for profile_name in dict_of_hotkeys:
             profile = QAction(text=profile_name)
@@ -284,6 +286,9 @@ class MainInterface(QMainWindow, Ui_MainWindow):
 
             self.profiles_group.addAction(profile)
             self.profiles_menu.addAction(profile)
+
+            self.profiles_submenu_tray_group.addAction(profile)
+            self.profiles_submenu_tray.addAction(profile)
 
     def load_hotkeys(self):
         list_of_hotkeys = read_hotkeys_json()[self.current_profile]['hotkeys']
