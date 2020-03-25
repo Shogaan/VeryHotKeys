@@ -1,10 +1,10 @@
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox
 
-from settings import Ui_settings_window
+from windows.settings import Ui_settings_window
 
-from global_definitions import get_colour
-from global_definitions import read_settings_json, write_settings_json
+from utils import get_colour
+from utils import read_settings_json, write_settings_json
 
 from constants import DEFAULT_SETTINGS
 from constants import CSS_SETTINGS_BRIGHT, CSS_SETTINGS_DARK

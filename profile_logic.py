@@ -3,10 +3,10 @@ from PyQt5.QtGui import QIcon
 
 from keyboard import unhook_all_hotkeys
 
-from profile import Ui_Dialog
+from windows.profile import Ui_Dialog
 
-from global_definitions import read_settings_json, write_settings_json
-from global_definitions import read_hotkeys_json, write_hotkeys_json
+from utils import read_settings_json, write_settings_json
+from utils import read_hotkeys_json, write_hotkeys_json
 
 from constants import CSS_PROFILE_BRIDHT, CSS_PROFILE_DARK
 from constants import TEMPLATE_FOR_CREATION_PROFILE

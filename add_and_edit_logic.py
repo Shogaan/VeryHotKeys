@@ -1,10 +1,10 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QDialog, QFileDialog
 
-from add_window import Ui_Dialog
+from windows.add_window import Ui_Dialog
 
-from global_definitions import read_settings_json
-from global_definitions import read_hotkeys_json, write_hotkeys_json
+from utils import read_settings_json
+from utils import read_hotkeys_json, write_hotkeys_json
 
 from constants import JS_KEYS_TO_SIMULATE, JS_MODES
 from constants import TRANSLATE_TABLE_RUS_ENG

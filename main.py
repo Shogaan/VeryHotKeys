@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 
 from pathlib import Path
 
-from interface import Ui_MainWindow
+from windows.interface import Ui_MainWindow
 
 from add_and_edit_logic import AddAndEditWindow
 from settings_logic import SettingsWindow
@@ -14,8 +14,8 @@ from profile_logic import ProfileWindow
 
 from modes_create_logic import treat_information_for_creating
 
-from global_definitions import read_settings_json, write_settings_json
-from global_definitions import read_hotkeys_json, write_hotkeys_json
+from utils import read_settings_json, write_settings_json
+from utils import read_hotkeys_json, write_hotkeys_json
 
 from constants import CSS_MAIN_BRIGHT, CSS_MAIN_DARK
 

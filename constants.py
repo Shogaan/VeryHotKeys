@@ -1,7 +1,7 @@
-JS_HOTKEYS = "hotkeys.json"
-JS_SETTINGS = "settings.json"
-JS_KEYS_TO_SIMULATE = "keys.json"
-JS_MODES = "modes.json"
+JS_HOTKEYS = "jsons/hotkeys.json"
+JS_SETTINGS = "jsons/settings.json"
+JS_KEYS_TO_SIMULATE = "jsons/keys.json"
+JS_MODES = "jsons/modes.json"
 
 CSS_MAIN_BRIGHT = "css/main_interface_bright.fcss"
 CSS_MAIN_DARK = "css/main_interface_dark.fcss"
